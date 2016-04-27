@@ -1,5 +1,5 @@
 class Answer < ActiveRecord::Base
-  belongs_to :question, foreign_key: :question_id
+  belongs_to :question
 
   validates :question_id, :body, presence: true
 end
