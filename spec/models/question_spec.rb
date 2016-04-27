@@ -6,10 +6,10 @@ RSpec.describe Question, type: :model do
 
   before(:each) do
     @question = FactoryGirl.create(:question)
-    @answer_1 = FactoryGirl.create(:answer)
-    @answer_2 = FactoryGirl.create(:answer)
-    @question.answers << @answer_1
-    @question.answers << @answer_2
+    answer_1 = FactoryGirl.create(:answer)
+    answer_2 = FactoryGirl.create(:answer)
+    @question.answers << answer_1
+    @question.answers << answer_2
   end
 
   it 'should has many answers' do
