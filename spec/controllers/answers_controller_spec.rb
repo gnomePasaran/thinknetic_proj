@@ -31,7 +31,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #create' do
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
-        expect { post :create, answer: attributes_for(:answer), question_id: question }.to change(Answer, :count).by(1)
+        expect { post :create, answer: attributes_for(:answer), question_id: question }.to change(question.answers, :count).by(1)
       end
 
       it 'redirects to show question view' do
@@ -59,9 +59,10 @@ RSpec.describe AnswersController, type: :controller do
         expect(assigns(:answer)).to eq answer
       end
 
-      it 'changes question attributes' do
+      it 'changes answer attributes' do
         patch :update, id: answer, answer: { question_id: question, body: 'new_body' }, question_id: question
         answer.reload
+        question.answers << answer
         expect(answer.question_id).to eq question.id
         expect(answer.body).to eq 'new_body'
       end
