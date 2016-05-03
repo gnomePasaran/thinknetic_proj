@@ -10,6 +10,6 @@ require 'rails_helper'
 #     end
 #   end
 # end
-RSpec.describe AnswerHelper, type: :helper do
+RSpec.describe AnswersHelper, type: :helper do
   pending "add some examples to (or delete) #{__FILE__}"
 end
