@@ -1,0 +1,4 @@
+= form_for(@answer, url: question_answers_path(params[:question_id], @answer)) do |f|
+  = f.label :body
+  = f.text_area :body
+  = f.submit 'Create'

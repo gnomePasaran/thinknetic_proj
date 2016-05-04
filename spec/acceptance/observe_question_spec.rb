@@ -1,11 +1,10 @@
 require 'rails_helper'
 
-feature 'Create question', %q{
-  In order to observ question
+feature 'Observe question', %q{
+  In order to observe question
   As an user
-  I want to be able to observe question
+  I want to be able to observe questions
 } do
-
 
   scenario 'User observe question' do
     question = create(:question)
