@@ -3,8 +3,10 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
   let(:answer) { create(:answer) }
+  let(:owner_answer) { create(:answer, question: question, user: @user) }
 
   describe 'GET #new' do
+    sign_in_user
     before { get :new, question_id: question }
 
     it 'assigns a new question to @question' do
@@ -17,6 +19,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #edit' do
+    sign_in_user
     before { get :edit, id: answer, question_id: question }
 
     it 'assigns a requested question to @question' do
@@ -29,6 +32,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
+    sign_in_user
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
         expect { post :create, answer: attributes_for(:answer), question_id: question }.to change(question.answers, :count).by(1)
@@ -53,6 +57,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    sign_in_user
     context 'with valid attributes' do
       it 'assigns a requested answer to @answer' do
         patch :update, id: answer, answer: attributes_for(:answer), question_id: question
@@ -88,14 +93,30 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { answer }
-    it 'deletes answer' do
-      expect { delete :destroy, id: answer, question_id: question }.to change(Answer, :count).by(-1)
+    sign_in_user
+    before { owner_answer }
+
+    context 'owner delete the answer' do
+      it 'deletes answer' do
+        expect { delete :destroy, id: owner_answer, question_id: question }.to change(@user.answers, :count).by(-1)
+      end
+
+      it 'redirects to question show view' do
+        delete :destroy, id: answer, question_id: question
+        expect(response).to redirect_to question_path(assigns(:question))
+      end
     end
 
-    it 'redirects to question show view' do
-      delete :destroy, id: answer, question_id: question
-      expect(response).to redirect_to question_path(assigns(:question))
+    context 'not owner delete the answer' do
+      it 'deletes answer' do
+        answer
+        expect { delete :destroy, id: answer, question_id: question }.not_to change(Answer, :count)
+      end
+
+      it 'redirects to question show view' do
+        delete :destroy, id: answer, question_id: question
+        expect(response).to redirect_to question_path(assigns(:question))
+      end
     end
   end
 end
