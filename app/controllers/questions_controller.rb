@@ -10,7 +10,7 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    @question = Question.new
+    @question = current_user.questions.new
   end
 
   def edit
@@ -18,6 +18,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = Question.new(question_params)
+    @question.user = current_user
 
     if @question.save
       redirect_to @question
@@ -35,7 +36,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy
+    @question.destroy if @question.user_id == current_user.id
     redirect_to question_path
   end
 

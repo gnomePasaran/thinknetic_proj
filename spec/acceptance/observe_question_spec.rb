@@ -10,6 +10,6 @@ feature 'Observe question', %q{
     question = create(:question)
     visit questions_path
 
-    expect(page).to have_content question.title #'Your question successfully created.'
+    expect(page).to have_content question.title
   end
 end

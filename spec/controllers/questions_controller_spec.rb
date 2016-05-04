@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let(:owner_question) { create(:question, user: @user) }
+
   describe 'GET #index' do
     let(:questions) { create_pair(:question) }
     before { get :index }
@@ -57,7 +60,7 @@ RSpec.describe QuestionsController, type: :controller do
     sign_in_user
     context 'with valid attributes' do
       it 'saves a new question in the database' do
-        expect { post :create, question: attributes_for(:question) }.to change(Question, :count).by(1)
+        expect { post :create, question: attributes_for(:question) }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -114,14 +117,29 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     sign_in_user
-    before { question }
-    it 'deletes question' do
-      expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
+    before { owner_question }
+
+    context 'owner delete the question' do
+      it 'deletes question' do
+        expect { delete :destroy, id: owner_question }.to change(@user.questions, :count).by(-1)
+      end
+
+      it 'redirects to index view' do
+        delete :destroy, id: owner_question
+        expect(response).to redirect_to question_path
+      end
     end
 
-    it 'redirects to index view' do
-      delete :destroy, id: question
-      expect(response).to redirect_to question_path
+    context 'not owner delete the question' do
+      it 'deletes question' do
+        question
+        expect { delete :destroy, id: question }.not_to change(Question, :count)
+      end
+
+      it 'redirects to index view' do
+        delete :destroy, id: question
+        expect(response).to redirect_to question_path
+      end
     end
   end
 end
