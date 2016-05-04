@@ -1,1 +1,13 @@
-p= link_to 'Ask question', new_question_path
+  - if @questions.any?
+    table#question
+      thead
+        tr
+          th
+            = Question.human_attribute_name('auditable_id')
+
+      tbody
+        - for question in @questions
+          tr
+            td.title = question.title
+
+  p= link_to 'Ask question', new_question_path
