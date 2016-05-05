@@ -1,0 +1,16 @@
+  - if @questions.any?
+    table#question
+      thead
+        tr
+          th
+            = Question.human_attribute_name('auditable_id')
+          th
+            | Actions
+
+      tbody
+        - for question in @questions
+          tr
+            td.title = link_to(question.title, question_path(question))
+            td.answer = link_to 'To answer', new_question_answer_path(question)
+
+  p= link_to 'Ask question', new_question_path

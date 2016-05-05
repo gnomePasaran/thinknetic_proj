@@ -1,0 +1,11 @@
+  = @question.title
+  br
+  = @question.body
+  br
+  | Answers:
+
+  - for answer in @question.answers
+    = answer.body
+    br
+
+  = link_to 'To answer', new_question_answer_path(@question)
