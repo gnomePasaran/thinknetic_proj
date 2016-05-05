@@ -1,3 +1,7 @@
+- if @answer.errors.any?
+  - @answer.errors.full_messages.each do |error|
+    p = error
+
 = form_for(@answer, url: question_answers_path(params[:question_id], @answer)) do |f|
   = f.label :body
   = f.text_area :body
