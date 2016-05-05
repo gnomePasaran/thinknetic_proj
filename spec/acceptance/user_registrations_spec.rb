@@ -17,4 +17,17 @@ feature 'User registration', %q{
     expect(page).to have_content 'Welcome! You have signed up successfully.'
     expect(current_path).to eq root_path
   end
+
+  scenario 'User try to registrate with not unique email' do
+    user = create(:user)
+
+    visit new_user_registration_path
+    fill_in 'Email', with: user.email
+    fill_in 'Password', with: '12345678'
+    fill_in 'Password confirmation', with: '12345678'
+
+    click_on 'Sign up'
+
+    expect(page).to have_content 'Email has already been taken'
+  end
 end

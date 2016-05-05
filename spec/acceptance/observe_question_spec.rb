@@ -7,9 +7,10 @@ feature 'Observe question', %q{
 } do
 
   scenario 'User observe question' do
-    question = create(:question)
+    questions = create_pair(:question)
     visit questions_path
 
-    expect(page).to have_content question.title
+    expect(page).to have_content questions.first.title
+    expect(page).to have_content questions.last.title
   end
 end

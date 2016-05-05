@@ -8,13 +8,14 @@ feature 'Observe answer', %q{
 
   scenario 'User observe answer' do
     question = create(:question)
-    question.answers << create(:answer)
+    answers = create_pair(:answer, question: question)
 
     visit questions_path
     click_on question.title
 
     expect(current_path).to eq question_path question
     expect(page).to have_content question.body
-    expect(page).to have_content question.answers.first.body
+    expect(page).to have_content answers.first.body
+    expect(page).to have_content answers.last.body
   end
 end
