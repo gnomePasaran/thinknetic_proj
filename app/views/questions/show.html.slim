@@ -1,11 +1,13 @@
-  = @question.title
-  br
-  = @question.body
-  br
-  | Answers:
+h1= @question.title
+p= @question.body
 
+.answers
   - for answer in @question.answers
-    = answer.body
-    br
+    p= answer.body
 
-  = link_to 'To answer', new_question_answer_path(@question)
+= form_for [@question, @answer] do |f|
+  =f.label :body, 'Your answer'
+  =f.text_area :body
+  =f.submit 'Create'
+
+= link_to 'To answer', new_question_answer_path(@question)
