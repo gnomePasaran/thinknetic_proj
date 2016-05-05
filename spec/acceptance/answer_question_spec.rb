@@ -7,32 +7,20 @@ feature 'Answer question', %q{
 } do
 
   given(:user) { create(:user) }
-  before { @question = create(:question) }
+  given!(:question) { create(:question) }
 
   scenario 'Authentificated user answer the question with valid' do
     sign_in(user)
 
     visit questions_path
-    click_on @question.title
+    click_on question.title
 
-    click_on 'To answer'
-    fill_in 'Body', with: 'Test answer'
+    fill_in 'Your answer', with: 'Test answer'
     click_on 'Create'
 
-    expect(current_path).to eq question_path @question
-    expect(page).to have_content 'Test answer'
-  end
-
-  scenario 'Authentificated user answer the question with invalid' do
-    sign_in(user)
-
-    visit questions_path
-    click_on @question.title
-
-    click_on 'To answer'
-    click_on 'Create'
-
-    expect(page).to have_content 'Body can\'t be blank'
+    within '.answers' do
+      expect(page).to have_content 'Test answer'
+    end
   end
 
   scenario 'Non-authentificated user answer the question' do
