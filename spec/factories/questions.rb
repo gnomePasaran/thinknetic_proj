@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :question do
-    title "MyString"
-    body "MyText"
+    title "MyQuestionTitle"
+    body "MyQuestionBody"
     user_id 1
   end
 

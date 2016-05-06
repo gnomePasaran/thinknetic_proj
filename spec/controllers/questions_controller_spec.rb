@@ -109,8 +109,8 @@ RSpec.describe QuestionsController, type: :controller do
       before { patch :update, id: question, question: { title: 'new_title', body: nil } }
       it 'does not change question attributes' do
         question.reload
-        expect(question.title).to eq 'MyString'
-        expect(question.body).to eq 'MyText'
+        expect(question.title).to eq 'MyQuestionTitle'
+        expect(question.body).to eq 'MyQuestionBody'
       end
 
       it 're-renders edit view' do
@@ -130,7 +130,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to index view' do
         delete :destroy, id: owner_question
-        expect(response).to redirect_to question_path
+        expect(response).to redirect_to questions_path
       end
     end
 
@@ -142,7 +142,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to index view' do
         delete :destroy, id: question
-        expect(response).to redirect_to question_path
+        expect(response).to redirect_to questions_path
       end
     end
   end
