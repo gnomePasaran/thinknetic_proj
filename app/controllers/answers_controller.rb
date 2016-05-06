@@ -16,7 +16,6 @@ class AnswersController < ApplicationController
     @answer.user = current_user
 
     @answer.save
-    redirect_to @question
   end
 
   def update
