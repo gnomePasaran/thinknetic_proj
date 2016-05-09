@@ -1,0 +1,10 @@
+h1= @question.title
+p= @question.body
+
+-if (@question.user == current_user) and user_signed_in?
+  = link_to 'Edit question', '', class: 'edit-question-link', remote: true
+  = link_to 'Delete question', question_path(@question), method: :delete 
+
+  .question-errors
+  
+  == render 'form'

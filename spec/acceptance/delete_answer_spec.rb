@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'acceptance_helper'
 
 feature 'Delete answer', %q{
   In order to be able to delete answer
@@ -11,7 +11,7 @@ feature 'Delete answer', %q{
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question, user: owner) }
 
-  scenario 'Signed in user try to delete his answer' do
+  scenario 'Signed in user try to delete his answer', js: true do
     sign_in(owner)
 
     visit questions_path
