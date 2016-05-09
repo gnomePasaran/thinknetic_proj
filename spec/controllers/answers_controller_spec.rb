@@ -64,34 +64,34 @@ RSpec.describe AnswersController, type: :controller do
     sign_in_user
     context 'with valid attributes' do
       it 'assigns a requested answer to @answer' do
-        patch :update, id: answer, answer: attributes_for(:answer), question_id: question
+        patch :update, id: answer, answer: attributes_for(:answer), question_id: question, format: :js
         expect(assigns(:answer)).to eq answer
       end
 
       it 'changes answer attributes' do
-        patch :update, id: answer, answer: { question_id: question, body: 'new_body' }, question_id: question
+        patch :update, id: answer, answer: { question_id: question, body: 'new_body' }, question_id: question, format: :js
         answer.reload
         question.answers << answer
         expect(answer.question_id).to eq question.id
         expect(answer.body).to eq 'new_body'
       end
 
-      it 'redirects to the show question' do
-        patch :update, id: answer, answer: attributes_for(:answer), question_id: question
-        expect(response).to redirect_to question_path(assigns(:question))
+      it 'render update question' do
+        patch :update, id: answer, answer: attributes_for(:answer), question_id: question, format: :js
+        expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
-      before { patch :update, id: answer, answer: { question_id: 1, body: nil }, question_id: question }
+      before { patch :update, id: answer, answer: { question_id: 1, body: nil }, question_id: question, format: :js }
       it 'does not change answer attributes' do
         answer.reload
         expect(answer.question_id).to eq 1
         expect(answer.body).to eq 'MyAnswerBody'
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 're-renders update' do
+        expect(response).to render_template :update
       end
     end
   end
@@ -102,24 +102,24 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'owner delete the answer' do
       it 'deletes answer' do
-        expect { delete :destroy, id: owner_answer, question_id: question }.to change(@user.answers, :count).by(-1)
+        expect { delete :destroy, id: owner_answer, question_id: question, format: :js }.to change(@user.answers, :count).by(-1)
       end
 
       it 'redirects to question show view' do
-        delete :destroy, id: answer, question_id: question
-        expect(response).to redirect_to question_path(assigns(:question))
+        delete :destroy, id: answer, question_id: question , format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context 'not owner delete the answer' do
       it 'deletes answer' do
         answer
-        expect { delete :destroy, id: answer, question_id: question }.not_to change(Answer, :count)
+        expect { delete :destroy, id: answer, question_id: question, format: :js }.not_to change(Answer, :count)
       end
 
       it 'redirects to question show view' do
-        delete :destroy, id: answer, question_id: question
-        expect(response).to redirect_to question_path(assigns(:question))
+        delete :destroy, id: answer, question_id: question, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end

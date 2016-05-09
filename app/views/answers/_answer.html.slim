@@ -1,2 +1,11 @@
-.answer
-  p = answer.body
+<div id="answer-#{answer.id}">
+  <div id="answer-text-#{answer.id}"> #{answer.body} </div>
+  - if (answer.user == current_user) and user_signed_in?
+    p= link_to('Delete answer', question_answer_path(@question, answer), method: :delete, remote: true)
+
+    p= link_to 'Edit answer', '', class: 'edit-answer-link', data: { answer_id: answer.id }
+    - if answer.persisted?
+      p
+        == render 'answers/form', answer: answer, button_text: 'Save edits', class_form: 'edit_answer_form'
+
+</div>

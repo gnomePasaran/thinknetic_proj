@@ -19,16 +19,11 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to @question
-    else
-      render :edit
-    end
+    @answer.update(answer_params)
   end
 
   def destroy
     @answer.destroy if @answer.user == current_user
-    redirect_to @question
   end
 
   private
