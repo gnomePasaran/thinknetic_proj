@@ -1,8 +1,9 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
+  protect_from_forgery except: :toggle_best
 
-  before_action :load_question, only: [:edit, :show, :update, :destroy, :accept]
-  before_action :accept, only: [:update, :destroy]
+  before_action :load_question, only: [:edit, :show, :update, :destroy, :accept, :toggle_best]
+  before_action :accept, only: [:update, :destroy, :toggle_best]
 
   def index
     @questions = Question.all
@@ -35,8 +36,14 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy if @question.user_id == current_user.id
+    @question.destroy
     redirect_to questions_path
+  end
+
+  def toggle_best
+    answer = Answer.find(params[:answer_id])
+    answer.toggle_best
+    redirect_to @question
   end
 
   private
