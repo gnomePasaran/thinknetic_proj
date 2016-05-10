@@ -1,8 +1,9 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :load_answer, only: [:edit, :update, :destroy]
-  before_action :load_question, only: [:create, :update, :destroy]
+  before_action :load_answer, only: [:edit, :update, :destroy, :accept]
+  before_action :load_question, only: [:create, :update, :destroy, :accept]
+  before_action :accept, only: [:update, :destroy]
 
   def new
     @answer = Answer.new
@@ -23,7 +24,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy if @answer.user == current_user
+    @answer.destroy
   end
 
   private
@@ -38,5 +39,9 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body)
+  end
+
+  def accept
+    redirect_to @question unless current_user == @answer.user
   end
 end

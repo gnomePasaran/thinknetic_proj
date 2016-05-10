@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:not_author) { create(:user) }
   let(:question) { create(:question) }
   let(:answer) { create(:answer) }
   let(:owner_answer) { create(:answer, question: question, user: @user) }
+  let(:not_owner_answer) { create(:answer, question: question, user: not_author) }
 
   describe 'GET #new' do
     sign_in_user
@@ -69,29 +71,41 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'changes answer attributes' do
-        patch :update, id: answer, answer: { question_id: question, body: 'new_body' }, question_id: question, format: :js
-        answer.reload
-        question.answers << answer
-        expect(answer.question_id).to eq question.id
-        expect(answer.body).to eq 'new_body'
+        patch :update, id: owner_answer, answer: { question_id: question, body: 'new_body' }, question_id: question, format: :js
+        owner_answer.reload
+        question.answers << owner_answer
+        expect(owner_answer.question_id).to eq question.id
+        expect(owner_answer.body).to eq 'new_body'
       end
 
       it 'render update question' do
-        patch :update, id: answer, answer: attributes_for(:answer), question_id: question, format: :js
+        patch :update, id: owner_answer, answer: attributes_for(:answer), question_id: question, format: :js
         expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
-      before { patch :update, id: answer, answer: { question_id: 1, body: nil }, question_id: question, format: :js }
+      before { patch :update, id: owner_answer, answer: { question_id: 1, body: nil }, question_id: question, format: :js }
       it 'does not change answer attributes' do
         answer.reload
-        expect(answer.question_id).to eq 1
-        expect(answer.body).to eq 'MyAnswerBody'
+        expect(owner_answer.question_id).to eq question.id
+        expect(owner_answer.body).to eq 'MyAnswerBody'
       end
 
       it 're-renders update' do
         expect(response).to render_template :update
+      end
+    end
+
+    context 'with valid attributes as non-author' do
+      it 'not assigns a requested answer to @answer' do
+        patch :update, id: not_owner_answer, answer: attributes_for(:answer), question_id: question, format: :js
+        expect(assigns(:not_owner_answer)).not_to eq not_owner_answer
+      end
+
+      it 'redirects to the update answer' do
+        patch :update, id: not_owner_answer, answer: attributes_for(:answer), question_id: question, format: :js
+        expect(response).to redirect_to question
       end
     end
   end
@@ -100,18 +114,18 @@ RSpec.describe AnswersController, type: :controller do
     sign_in_user
     before { owner_answer }
 
-    context 'owner delete the answer' do
+    context 'owner deletes the answer' do
       it 'deletes answer' do
         expect { delete :destroy, id: owner_answer, question_id: question, format: :js }.to change(@user.answers, :count).by(-1)
       end
 
       it 'redirects to question show view' do
         delete :destroy, id: answer, question_id: question , format: :js
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to question
       end
     end
 
-    context 'not owner delete the answer' do
+    context 'not owner deletes the answer' do
       it 'deletes answer' do
         answer
         expect { delete :destroy, id: answer, question_id: question, format: :js }.not_to change(Answer, :count)
@@ -119,7 +133,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to question show view' do
         delete :destroy, id: answer, question_id: question, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to question
       end
     end
   end
