@@ -8,7 +8,7 @@ class Answer < ActiveRecord::Base
   	answer = Answer.find_by(is_best: :true)
     transaction do
       answer.update(is_best: false) if answer.present?
-      self.update(is_best: true)
+      self.update(is_best: true) if answer != self
     end
   end
 end

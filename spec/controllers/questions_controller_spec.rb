@@ -153,7 +153,6 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'GET #toggle_best' do
     sign_in_user
-
     context 'owner marks the best answer' do
       before do
         owner_question

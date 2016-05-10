@@ -2,7 +2,7 @@
   == render 'questions/question'
 
 .answers
-  - for answer in @question.answers
+  - for answer in @question.answers.order(is_best: :desc)
     == render 'answers/answer', answer: answer
 	.answer-errors
 

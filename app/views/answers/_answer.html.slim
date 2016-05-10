@@ -5,6 +5,14 @@
 
     p= link_to 'Edit answer', '', class: 'edit-answer-link', data: { answer_id: answer.id }
     - if answer.persisted?
+      
+      - if (@question.user == current_user) and user_signed_in?
+        - if answer.is_best?
+          p THE BEST
+          p= link_to('Unmark best', toggle_best_question_path(@question, answer_id: answer.id))
+        - else
+          p= link_to('Mark best', toggle_best_question_path(@question, answer_id: answer.id))
+      
       p
         == render 'answers/form', answer: answer, button_text: 'Save edits', class_form: 'edit_answer_form'
 
