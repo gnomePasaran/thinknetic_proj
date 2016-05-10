@@ -2,8 +2,11 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
+  let(:not_author) { create(:user) }
   let(:question) { create(:question, user: user) }
   let(:owner_question) { create(:question, user: @user) }
+  let(:not_owner_question) { create(:question, user: not_author) }
+  let(:answer) { create(:answer, question: owner_question, user: not_author) }
 
   describe 'GET #index' do
     let(:questions) { create_pair(:question) }
@@ -73,26 +76,28 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     sign_in_user
-    context 'with valid attributes' do
+    before { owner_question }
+
+    context 'with valid attributes as author' do
       it 'assigns a requested question to @question' do
         patch :update, id: question, question: attributes_for(:question), format: :js
         expect(assigns(:question)).to eq question
       end
 
       it 'changes question attributes' do
-        patch :update, id: question, question: { title: 'new_title', body: 'new_body' }, format: :js
-        question.reload
-        expect(question.title).to eq 'new_title'
-        expect(question.body).to eq 'new_body'
+        patch :update, id: owner_question, question: { title: 'new_title', body: 'new_body' }, format: :js
+        owner_question.reload
+        expect(owner_question.title).to eq 'new_title'
+        expect(owner_question.body).to eq 'new_body'
       end
 
       it 'redirects to the update question' do
-        patch :update, id: question, question: attributes_for(:question), format: :js
+        patch :update, id: owner_question, question: attributes_for(:question), format: :js
         expect(response).to render_template :update
       end
     end
 
-    context 'with invalid attributes' do
+    context 'with invalid attributes as author' do
       before { patch :update, id: question, question: { title: 'new_title', body: nil }, format: :js }
       it 'does not change question attributes' do
         question.reload
@@ -101,7 +106,20 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 're-renders edit view' do
+        patch :update, id: owner_question, question: attributes_for(:question), format: :js
         expect(response).to render_template :update
+      end
+    end
+
+    context 'with valid attributes as non-author' do
+      it 'not assigns a requested question to @question' do
+        patch :update, id: not_owner_question, question: attributes_for(:question), format: :js
+        expect(assigns(:not_owner_question)).not_to eq not_owner_question
+      end
+
+      it 'redirects to the update question' do
+        patch :update, id: not_owner_question, question: attributes_for(:question), format: :js
+        expect(response).to redirect_to not_owner_question
       end
     end
   end
@@ -121,15 +139,43 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'not owner delete the question' do
-      it 'deletes question' do
-        question
-        expect { delete :destroy, id: question }.not_to change(Question, :count)
+    context 'non-owner delete the question' do
+      it 'not able to deletes question' do
+        expect { delete :destroy, id: not_owner_question }.not_to change(@user.questions, :count)
       end
 
       it 'redirects to index view' do
-        delete :destroy, id: question
-        expect(response).to redirect_to questions_path
+        delete :destroy, id: not_owner_question
+        expect(response).to redirect_to question_path
+      end
+    end
+  end
+
+  describe 'GET #toggle_best' do
+    sign_in_user
+    before { owner_question }
+
+    context 'owner marks the best answer' do
+      it 'marks answer' do
+        get :toggle_best, id: owner_question, answer: answer, question: attributes_for(:question), format: :js
+        expect(answer.is_best).to eq true
+      end
+
+      it 'renders new order of question' do
+        get :toggle_best, id: owner_question, answer: answer, question: attributes_for(:question), format: :js
+        expect(response).to render_template owner_question
+      end
+    end
+
+    context 'not owner delete the answer' do
+      it 'marks answer' do
+        get :toggle_best, id: not_owner_question, answer: answer, question: attributes_for(:question), format: :js
+        expect(answer.is_best).to eq false
+      end
+
+      it 'renders new order of question' do
+        get :toggle_best, id: not_owner_question, answer: answer, question: attributes_for(:question), format: :js
+        expect(response).to redirect_to question_path
       end
     end
   end

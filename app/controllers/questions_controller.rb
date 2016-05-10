@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:edit, :show, :update, :destroy]
+
+  before_action :load_question, only: [:edit, :show, :update, :destroy, :accept]
+  before_action :accept, only: [:update, :destroy]
 
   def index
     @questions = Question.all
@@ -45,5 +47,9 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  def accept
+    redirect_to @question unless current_user == @question.user
   end
 end
