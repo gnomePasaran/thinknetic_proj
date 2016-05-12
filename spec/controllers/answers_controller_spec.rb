@@ -2,10 +2,12 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:not_author) { create(:user) }
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer) }
+  let(:question) { create(:question, user: @user) }
+  let(:answer) { create(:answer, question: question) }
   let(:owner_answer) { create(:answer, question: question, user: @user) }
   let(:not_owner_answer) { create(:answer, question: question, user: not_author) }
+  let(:not_owner_question) { create(:question, user: not_author) }
+
 
   describe 'GET #new' do
     sign_in_user
@@ -134,6 +136,36 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to question show view' do
         delete :destroy, id: answer, question_id: question, format: :js
         expect(response).to redirect_to question
+      end
+    end
+  end
+
+  describe 'GET #toggle_best' do
+    sign_in_user
+    context 'owner marks the best answer' do
+      before do
+        get :toggle_best, id: owner_answer, question_id: question
+      end
+      it 'marks answer' do
+        expect{ owner_answer.reload }.to change{ owner_answer.is_best }.from(false).to(true)
+      end
+
+      it 'renders new order of question' do
+        expect(response).to redirect_to question
+      end
+    end
+
+    context 'not owner delete the answer' do
+      before do
+        not_owner_question
+        get :toggle_best, id: not_owner_answer, question_id: not_owner_question
+      end
+      it 'marks answer' do
+        expect{ not_owner_answer.reload }.not_to change{ owner_answer.is_best }
+      end
+
+      it 'renders new order of question' do
+        expect(response).to redirect_to not_owner_question
       end
     end
   end

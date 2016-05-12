@@ -5,10 +5,10 @@ class Answer < ActiveRecord::Base
   validates :question_id, :body, :user_id, presence: true
 
   def toggle_best
-  	answer = Answer.find_by(is_best: :true)
     transaction do
-      answer.update(is_best: false) if answer.present?
-      self.update(is_best: true) if answer != self
+      toggle :is_best
+      question.answers.where(is_best: true).update_all(is_best: false) if is_best?
+      save!
     end
   end
 end

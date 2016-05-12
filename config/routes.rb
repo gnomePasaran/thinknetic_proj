@@ -3,9 +3,10 @@ Rails.application.routes.draw do
   root to: 'questions#index'
 
   resources :questions do
-    resources :answers, except: ['index', 'show']
-    member do
-      get 'toggle_best/:answer_id', to: 'questions#toggle_best', as: :toggle_best
+    resources :answers, except: ['index', 'show'] do
+      member do
+        get :toggle_best
+      end
     end
   end
 

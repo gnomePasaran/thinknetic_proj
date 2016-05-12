@@ -4,8 +4,7 @@
 .answers
   - for answer in @question.answers.order(is_best: :desc)
     == render 'answers/answer', answer: answer
-	.answer-errors
 
 == render 'answers/form', answer: @answer, button_text: 'Create answer', class_form: 'new_answer_form'
 
-= link_to 'To answer', new_question_answer_path(@question), remoute: true
+= link_to 'To answer', new_question_answer_path(@question), remote: true

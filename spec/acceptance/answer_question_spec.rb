@@ -7,7 +7,8 @@ feature 'Answer question', %q{
 } do
 
   given(:user) { create(:user) }
-  given!(:question) { create(:question) }
+  given(:not_user) { create(:user) }
+  given!(:question) { create(:question, user: user) }
 
   scenario 'Authentificated user answer the question with valid', js: true do
     sign_in(user)
@@ -24,14 +25,11 @@ feature 'Answer question', %q{
       expect(page).to have_link 'Edit'
       expect(page).to have_link 'Delete'
     end
-
-    within '.answers' do
-      click_on 'Edit answer'
-      expect(page).to have_selector 'textarea'
-    end
   end
 
   scenario 'Non-authentificated user answer the question' do
+    sign_in(not_user)
+
     visit questions_path
     click_on question.title
     fill_in 'Your answer', with: 'Test answer'

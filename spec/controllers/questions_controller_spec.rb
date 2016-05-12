@@ -150,36 +150,4 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
-
-  describe 'GET #toggle_best' do
-    sign_in_user
-    context 'owner marks the best answer' do
-      before do
-        owner_question
-        get :toggle_best, id: owner_question, answer_id: answer, question: attributes_for(:question)
-      end
-      it 'marks answer' do
-        expect{ answer.reload }.to change{answer.is_best}.from(false).to(true)
-      end
-
-      it 'renders new order of question' do
-        get :toggle_best, id: owner_question, answer_id: answer, question: attributes_for(:question)
-        expect(response).to redirect_to owner_question
-      end
-    end
-
-    context 'not owner delete the answer' do
-      before do
-        not_owner_question
-        get :toggle_best, id: not_owner_question, answer_id: answer, question: attributes_for(:question)
-      end
-      it 'marks answer' do
-        expect{ answer.reload }.not_to change{ answer.is_best }
-      end
-
-      it 'renders new order of question' do
-        expect(response).to redirect_to question_path
-      end
-    end
-  end
 end
