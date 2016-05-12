@@ -21,8 +21,8 @@ feature 'Answer editing', %q{
     before do
       sign_in(user)
       visit question_path(question)
-    end 
-  
+    end
+
     scenario 'Author sees edit link' do
       within '.answers' do
         expect(page).to have_link 'Edit answer'
@@ -31,7 +31,7 @@ feature 'Answer editing', %q{
 
     scenario 'Author try to edit his answer with valid attributes', js: true do
       click_on 'Edit answer'
-      within '.answers' do
+      within "#answer-#{answer.id}" do
         fill_in 'Your answer', with: 'Edited answer'
         click_on 'Save edits'
 
@@ -43,7 +43,7 @@ feature 'Answer editing', %q{
 
     scenario 'Author try to edit his answer with invalid attributes', js: true do
       click_on 'Edit answer'
-      within '.answers' do
+      within "#answer-#{answer.id}" do
         fill_in 'Your answer', with: ''
         click_on 'Save edits'
 
@@ -52,7 +52,7 @@ feature 'Answer editing', %q{
     end
 
   end
-  
+
   scenario 'Authentificated user try to edit not his answer', js: true do
     sign_in(not_owner)
     visit question_path(question)

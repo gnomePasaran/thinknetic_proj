@@ -27,15 +27,11 @@ feature 'Answer question', %q{
     end
   end
 
-  scenario 'Non-authentificated user answer the question' do
-    sign_in(not_user)
-
+  scenario 'Non-authentificated user answer the question', js: true do
     visit questions_path
     click_on question.title
-    fill_in 'Your answer', with: 'Test answer'
-    click_on 'Create answer'
 
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).not_to have_selector 'textarea'
   end
 
   scenario 'Non-authentificated user answer the question', js: true do

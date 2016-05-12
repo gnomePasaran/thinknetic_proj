@@ -51,10 +51,20 @@ feature 'Mark best answer', %q{
 
       within "#answer-#{answers.first.id}" do
         expect(page).not_to have_content 'Unmark best'
-      end 
-      within "#answer-#{answers.last.id}" do 
+      end
+      within "#answer-#{answers.last.id}" do
         expect(page).to have_content 'THE BEST'
-      end  
+      end
+    end
+
+    scenario 'The best answer should be first' do
+      within "#answer-#{answers.last.id}" do
+        click_on 'Mark best'
+      end
+# save_and_open_page
+      within '.answers .answer:first-child' do
+        expect(page).to have_content 'THE BEST'
+      end
     end
   end
 
