@@ -155,6 +155,13 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
+    context 'owner marks not his answer' do
+      it 'marks answer' do
+        get :toggle_best, id: not_owner_answer, question_id: question
+        expect{ not_owner_answer.reload }.to change{ not_owner_answer.is_best }.from(false).to(true)    
+      end
+    end
+
     context 'not owner delete the answer' do
       before do
         not_owner_question

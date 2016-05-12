@@ -7,3 +7,7 @@ $ ->
     $(this).hide();
     answer_id = $(this).data('answerId');
     $('form#edit-answer-' + answer_id).show();
+
+  $(document).on 'ajax:success', '.new_answer_form', (data, status, xhr) ->
+    $('.edit-answer-link').show()
+    $('.new_answer_form').hide()
