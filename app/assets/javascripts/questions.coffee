@@ -7,6 +7,6 @@ $ ->
     $(this).hide();
     $('form#question-form').show();
 
-  $(document).on 'ajax:success', 'question-form', (data, status, xhr) ->
+  $(document).on 'ajax:success', '#question-form', (data, status, xhr) ->
     $('.edit-question-link').show()
     $('form#question-form').hide()

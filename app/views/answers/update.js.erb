@@ -3,7 +3,5 @@
     $('.answer-errors').before('<%= j message %>');
   <% end %>
 <% else %>
-  $('.edit_answer_form').hide();
-  $('.edit-answer-link').show();
   $('#answer-text-<%= @answer.id %>').replaceWith('<%= j @answer.body %>')
 <% end %>

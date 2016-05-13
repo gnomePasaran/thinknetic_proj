@@ -5,7 +5,7 @@
   - for answer in @question.answers
     == render 'answers/answer', answer: answer
 
-  - if signed_in?
-    == render 'answers/form', answer: @answer, button_text: 'Create answer', class_form: 'new_answer_form'
+- if signed_in?
+  == render 'answers/form', answer: @answer, button_text: 'Create answer', class_form: 'new_answer_form'
 
 = link_to 'To answer', new_question_answer_path(@question), remote: true
