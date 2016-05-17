@@ -12,7 +12,8 @@
   p Attachments:
   p
     = f.fields_for :attachments do |a|
-      = a.label :file
-      = a.file_field :file
+      = render 'attachment_fields', f: a
+  
+      = link_to_add_association 'add attach', f, :attachments
 
   p= f.submit 'Create'

@@ -25,6 +25,7 @@ gem 'devise'
 gem 'slim-rails'
 gem 'carrierwave'
 gem 'remotipart'
+gem 'cocoon'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 
