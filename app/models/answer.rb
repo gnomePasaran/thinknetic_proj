@@ -3,7 +3,7 @@ class Answer < ActiveRecord::Base
   belongs_to :user
 
   has_many :attachments, as: :attachable, dependent: :destroy
-  accepts_nested_attributes_for :attachments
+  accepts_nested_attributes_for :attachments#, reject_if: proc { |a| a[:file].blank? }, allow_destroy: true
 
   validates :question_id, :body, :user_id, presence: true
 

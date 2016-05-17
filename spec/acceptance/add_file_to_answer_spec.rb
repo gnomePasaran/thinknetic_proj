@@ -14,13 +14,13 @@ feature 'Add files to answer', %q{
     visit question_path(question)
   end
 
-  scenario 'User attach file when ask the answer' do
+  scenario 'User attach file when ask the answer', js: true  do
     fill_in 'Your answer', with: 'Test answer'
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
     click_on 'Create answer'
 
     within '.answers' do
-      expect(page).to have_link 'spec_helper.rb', href: 'uploads/attachment/file/1'
+      expect(page).to have_link 'spec_helper.rb', href: '/uploads/attachment/file/1/spec_helper.rb'
     end
   end
 end

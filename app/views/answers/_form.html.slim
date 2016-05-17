@@ -1,6 +1,14 @@
 .answer-errors
 
 = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}", class: class_form } do |f|
-  = f.label :body, 'Your answer'
-  = f.text_area :body
-  = f.submit button_text
+  p
+    = f.label :body, 'Your answer'
+    = f.text_area :body
+
+  p Attachments:
+  p
+    = f.fields_for :attachments do |a|
+      = a.label :file
+      = a.file_field :file
+
+  p= f.submit button_text
