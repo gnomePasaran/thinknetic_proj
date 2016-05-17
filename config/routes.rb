@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   root to: 'questions#index'
 
   resources :questions do
-    resources :answers, except: ['index', 'show']
+    resources :answers, except: ['index', 'show'] do
+      member do
+        get :toggle_best
+      end
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

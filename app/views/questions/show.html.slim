@@ -1,13 +1,11 @@
-h1= @question.title
-p= @question.body
+.question
+  == render 'questions/question'
 
 .answers
   - for answer in @question.answers
-    p= answer.body
+    == render 'answers/answer', answer: answer
 
-= form_for [@question, @answer], remote: true do |f|
-  =f.label :body, 'Your answer'
-  =f.text_area :body
-  =f.submit 'Create'
+- if signed_in?
+  == render 'answers/form', answer: @answer, button_text: 'Create answer', class_form: 'new_answer_form'
 
-= link_to 'To answer', new_question_answer_path(@question)
+= link_to 'To answer', new_question_answer_path(@question), remote: true

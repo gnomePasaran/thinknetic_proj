@@ -1,0 +1,6 @@
+.answer-errors
+
+= form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}", class: class_form } do |f|
+  = f.label :body, 'Your answer'
+  = f.text_area :body
+  = f.submit button_text

@@ -2,8 +2,11 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
+  let(:not_author) { create(:user) }
   let(:question) { create(:question, user: user) }
   let(:owner_question) { create(:question, user: @user) }
+  let(:not_owner_question) { create(:question, user: not_author) }
+  let(:answer) { create(:answer, question: owner_question, user: not_author) }
 
   describe 'GET #index' do
     let(:questions) { create_pair(:question) }
@@ -47,19 +50,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'GET #edit' do
-    sign_in_user
-    before { get :edit, id: question }
-
-    it 'assigns a requested question to @question' do
-      expect(assigns(:question)).to eq question
-    end
-
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'POST #create' do
     sign_in_user
     context 'with valid attributes' do
@@ -86,35 +76,50 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     sign_in_user
-    context 'with valid attributes' do
+    before { owner_question }
+
+    context 'with valid attributes as author' do
       it 'assigns a requested question to @question' do
-        patch :update, id: question, question: attributes_for(:question)
+        patch :update, id: question, question: attributes_for(:question), format: :js
         expect(assigns(:question)).to eq question
       end
 
       it 'changes question attributes' do
-        patch :update, id: question, question: { title: 'new_title', body: 'new_body' }
-        question.reload
-        expect(question.title).to eq 'new_title'
-        expect(question.body).to eq 'new_body'
+        patch :update, id: owner_question, question: { title: 'new_title', body: 'new_body' }, format: :js
+        owner_question.reload
+        expect(owner_question.title).to eq 'new_title'
+        expect(owner_question.body).to eq 'new_body'
       end
 
       it 'redirects to the update question' do
-        patch :update, id: question, question: attributes_for(:question)
-        expect(response).to redirect_to :question
+        patch :update, id: owner_question, question: attributes_for(:question), format: :js
+        expect(response).to render_template :update
       end
     end
 
-    context 'with invalid attributes' do
-      before { patch :update, id: question, question: { title: 'new_title', body: nil } }
+    context 'with invalid attributes as author' do
+      before { patch :update, id: question, question: { title: 'new_title', body: nil }, format: :js }
       it 'does not change question attributes' do
         question.reload
-        expect(question.title).to eq 'MyString'
-        expect(question.body).to eq 'MyText'
+        expect(question.title).to eq 'MyQuestionTitle'
+        expect(question.body).to eq 'MyQuestionBody'
       end
 
       it 're-renders edit view' do
-        expect(response).to render_template :edit
+        patch :update, id: owner_question, question: attributes_for(:question), format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with valid attributes as non-author' do
+      it 'not assigns a requested question to @question' do
+        patch :update, id: not_owner_question, question: attributes_for(:question), format: :js
+        expect(assigns(:not_owner_question)).not_to eq not_owner_question
+      end
+
+      it 'redirects to the update question' do
+        patch :update, id: not_owner_question, question: attributes_for(:question), format: :js
+        expect(response).to redirect_to not_owner_question
       end
     end
   end
@@ -130,18 +135,17 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to index view' do
         delete :destroy, id: owner_question
-        expect(response).to redirect_to question_path
+        expect(response).to redirect_to questions_path
       end
     end
 
-    context 'not owner delete the question' do
-      it 'deletes question' do
-        question
-        expect { delete :destroy, id: question }.not_to change(Question, :count)
+    context 'non-owner delete the question' do
+      it 'not able to deletes question' do
+        expect { delete :destroy, id: not_owner_question }.not_to change(@user.questions, :count)
       end
 
       it 'redirects to index view' do
-        delete :destroy, id: question
+        delete :destroy, id: not_owner_question
         expect(response).to redirect_to question_path
       end
     end

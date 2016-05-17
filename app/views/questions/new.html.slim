@@ -2,7 +2,7 @@
   - @question.errors.full_messages.each do |error|
     p = error
 
-= form_for @question do |f|
+= form_for @question, html: { id: 'question-form' } do |f|
   = f.label :title
   = f.text_field :title
   = f.label :body

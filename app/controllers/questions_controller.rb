@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:edit, :show, :update, :destroy]
+
+  before_action :load_question, only: [:edit, :show, :update, :destroy, :access]
+  before_action :access, only: [:update, :destroy]
 
   def index
     @questions = Question.all
@@ -29,16 +31,12 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
-    else
-      render :edit
-    end
+    @question.update(question_params)
   end
 
   def destroy
-    @question.destroy if @question.user_id == current_user.id
-    redirect_to question_path
+    @question.destroy
+    redirect_to questions_path
   end
 
   private
@@ -49,5 +47,9 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  def access
+    redirect_to @question unless current_user.id == @question.user_id
   end
 end
