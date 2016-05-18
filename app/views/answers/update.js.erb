@@ -3,5 +3,5 @@
     $('.answer-errors').before('<%= j message %>');
   <% end %>
 <% else %>
-  $('#answer-text-<%= @answer.id %>').replaceWith('<%= j @answer.body %>')
+  $('#answer-<%= @answer.id %>').replaceWith("<%= j render 'answers/answer', answer: @answer %>")
 <% end %>
