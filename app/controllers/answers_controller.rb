@@ -16,16 +16,16 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
 
-    # @answer.save
+    @answer.save
 
-    respond_to do |format|
-      if @answer.save
-        format.html { redirect_to @question }
-      else
-        format.html { render 'questions/show' }
-      end
-      format.js
-    end
+    # respond_to do |format|
+    #   if @answer.save
+    #     format.html { redirect_to @question }
+    #   else
+    #     format.html { render 'questions/show' }
+    #   end
+    #   format.js
+    # end
   end
 
   def update

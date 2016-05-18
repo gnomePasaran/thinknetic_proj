@@ -24,7 +24,6 @@ feature 'Delete answer', %q{
       click_on 'remove attach'
       click_on 'Save edits'
     end
-    save_and_open_page
 
     expect(page).not_to have_link 'spec_helper.rb', href: '/uploads/attachment/file/1/spec_helper.rb'
   end

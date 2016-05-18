@@ -3,5 +3,9 @@
     $('.question-errors').before('<%= j message %>');
   <% end %>
 <% else %>
-  $('.question').replaceWith("<%= j render 'questions/question' %>");
+  <% if remotipart_submitted? %>
+    $('.question').replaceWith("<%= j "#{ render 'questions/question' }" %>");
+  <% else %>
+    $('.question').replaceWith("<%= j render 'questions/question' %>");
+  <% end %>
 <% end %>
