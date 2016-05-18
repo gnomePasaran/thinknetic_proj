@@ -61,7 +61,7 @@ feature 'Mark best answer', %q{
       within "#answer-#{answers.last.id}" do
         click_on 'Mark best'
       end
-# save_and_open_page
+
       within '.answers .answer:first-child' do
         expect(page).to have_content 'THE BEST'
       end

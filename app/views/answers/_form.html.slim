@@ -6,10 +6,11 @@
     = f.text_area :body
 
   p Attachments:
-  p
+  #attachments
     = f.fields_for :attachments do |a|
       = render 'questions/attachment_fields', f: a
-  
-      = link_to_add_association 'add attach', f, :attachments
 
-  p= f.submit button_text
+    .links
+      = link_to_add_association 'add attach', f, :attachments, partial: 'questions/attachment_fields'
+
+  = f.submit button_text
