@@ -17,15 +17,6 @@ class AnswersController < ApplicationController
     @answer.user = current_user
 
     @answer.save
-
-    # respond_to do |format|
-    #   if @answer.save
-    #     format.html { redirect_to @question }
-    #   else
-    #     format.html { render 'questions/show' }
-    #   end
-    #   format.js
-    # end
   end
 
   def update
