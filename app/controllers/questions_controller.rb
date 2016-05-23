@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
-  before_action :load_question, only: [:edit, :show, :update, :destroy, :access]
+  before_action :load_question, only: [:edit, :show, :update, :destroy, :access, :vote]
   before_action :access, only: [:update, :destroy]
 
   def index
@@ -39,6 +39,13 @@ class QuestionsController < ApplicationController
   def destroy
     @question.destroy
     redirect_to questions_path
+  end
+
+  def vote
+    redirect_to @question if current_user.id == @question.user_id
+    @question.vote(current_user, params[:score])
+
+    render :show
   end
 
   private

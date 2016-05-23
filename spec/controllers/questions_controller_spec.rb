@@ -7,6 +7,8 @@ RSpec.describe QuestionsController, type: :controller do
   let(:owner_question) { create(:question, user: @user) }
   let(:not_owner_question) { create(:question, user: not_author) }
   let(:answer) { create(:answer, question: owner_question, user: not_author) }
+  let(:vote_1) { create(:vote_question, votable: not_owner_question, user: not_author, score: 1) }
+
 
   describe 'GET #index' do
     let(:questions) { create_pair(:question) }
@@ -157,5 +159,44 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to question_path
       end
     end
+  end
+
+  describe 'POST #vote' do
+    sign_in_user
+
+    before do
+      not_owner_question
+    end
+
+    context 'user likes the question' do
+      it 'likes question' do
+      vote_1
+        expect { post :vote, id: not_owner_question, score: :like }.to change{ not_owner_question.get_score }.from(0).to(1)
+      end
+
+      it 'unlikes question' do
+        expect { post :vote, id: not_owner_question, score: :dislike }.to change{ not_owner_question.get_score }.from(0).to(-1)
+      end
+
+      it 'cancel voying for question' do
+        expect { post :vote, id: not_owner_question, score: :neutral }.to change{ not_owner_question.get_score }.from(1).to(0)
+      end
+
+      it 'render question view' do
+        post :vote, id: not_owner_question, score: :like
+        expect(response).to render_template question_path(not_owner_question)
+      end
+    end
+
+    # context 'non-owner delete the question' do
+    #   it 'not able to deletes question' do
+    #     expect { delete :destroy, id: not_owner_question }.not_to change(@user.questions, :count)
+    #   end
+
+    #   it 'redirects to index view' do
+    #     delete :destroy, id: not_owner_question
+    #     expect(response).to redirect_to question_path
+    #   end
+    # end
   end
 end
