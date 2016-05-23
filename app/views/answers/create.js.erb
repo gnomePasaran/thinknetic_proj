@@ -3,6 +3,10 @@
     $('.answer-errors').before('<%= j message %>');
   <% end %>
 <% else %>
-  $('.answers').append("<%= j render 'answers/answer', answer: @answer %>");
+  <% if remotipart_submitted? %>
+    $('.answers').append("<%= j "#{ render 'answers/answer', answer: @answer }" %>");
+  <% else %>
+    $('.answers').append("<%= j render 'answers/answer', answer: @answer %>");
+  <% end %>
   $('#answer_body').val('');
 <% end %>

@@ -2,9 +2,21 @@
   - @question.errors.full_messages.each do |error|
     p = error
 
-= form_for @question, html: { id: 'question-form' } do |f|
-  = f.label :title
-  = f.text_field :title
-  = f.label :body
-  = f.text_area :body
-  = f.submit 'Create'
+= form_for @question, html: { id: 'new_question-form' } do |f|
+  p
+    = f.label :title
+    = f.text_field :title
+  p
+    = f.label :body
+    = f.text_area :body
+
+  p Attachments:
+  p
+    #attachments
+      = f.fields_for :attachments do |a|
+        = render 'attachment_fields', f: a
+
+      .links
+        = link_to_add_association 'add attach', f, :attachments
+
+  p= f.submit 'Create'
