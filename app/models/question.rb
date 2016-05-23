@@ -12,23 +12,20 @@ class Question < ActiveRecord::Base
   validates :title, :body, :user_id, presence: true
 
   def vote(user, score)
-    p score
     if (vote = self.votes.find_by_user_id(user))
-      vote.score!
+      if Vote.respond_to?(score) && Vote.scores.to_s.include?(score)
+        vote.public_send("#{score}!")
+      end
     else
       self.votes.create(user: user, score: score)
     end
   end
 
   def get_score
-    result = 0
-    self.votes.each do |vote|
-      if vote.like?
-        result += 1
-      elsif vote.dislike?
-        result -= 1
-      end
-    end
-    result
+    self.votes.sum(:score)
+  end
+
+  def get_vote(user)
+    self.votes.find_by_user_id(user)
   end
 end
