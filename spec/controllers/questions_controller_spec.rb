@@ -7,7 +7,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:owner_question) { create(:question, user: @user) }
   let(:not_owner_question) { create(:question, user: not_author) }
   let(:answer) { create(:answer, question: owner_question, user: not_author) }
-  let(:vote_1) { create(:vote_question, votable: not_owner_question, user: not_author, score: 1) }
+  let(:vote_1) { create(:vote_question, votable: owner_question, user: not_author, score: 1) }
 
 
   describe 'GET #index' do
@@ -164,39 +164,62 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'POST #vote' do
     sign_in_user
 
-    before do
-      not_owner_question
-    end
-
     context 'user likes the question' do
+
+      before do
+        owner_question
+        sign_in(not_author)
+      end
+
       it 'likes question' do
-      vote_1
-        expect { post :vote, id: not_owner_question, score: :like }.to change{ not_owner_question.get_score }.from(0).to(1)
+        expect { post :vote, id: owner_question, score: :like }
+            .to change{ owner_question.get_score }.from(0).to(1)
       end
 
       it 'unlikes question' do
-        expect { post :vote, id: not_owner_question, score: :dislike }.to change{ not_owner_question.get_score }.from(0).to(-1)
+        expect { post :vote, id: owner_question, score: :dislike }
+            .to change{ owner_question.get_score }.from(0).to(-1)
       end
 
-      it 'cancel voying for question' do
-        expect { post :vote, id: not_owner_question, score: :neutral }.to change{ not_owner_question.get_score }.from(1).to(0)
+      it 'cancel voting for question' do
+        vote_1
+        expect { post :vote, id: owner_question, score: :neutral }
+            .to change{ owner_question.get_score }.from(1).to(0)
       end
 
       it 'render question view' do
-        post :vote, id: not_owner_question, score: :like
-        expect(response).to render_template question_path(not_owner_question)
+        post :vote, id: owner_question, score: :like
+        expect(response).to render_template :show
       end
     end
 
-    # context 'non-owner delete the question' do
-    #   it 'not able to deletes question' do
-    #     expect { delete :destroy, id: not_owner_question }.not_to change(@user.questions, :count)
-    #   end
+    context 'Athor of the question try to' do
 
-    #   it 'redirects to index view' do
-    #     delete :destroy, id: not_owner_question
-    #     expect(response).to redirect_to question_path
-    #   end
-    # end
+      before do
+        question
+        sign_in(user)
+      end
+
+      it 'likes question' do
+        expect { post :vote, id: question, score: :like }
+            .not_to change{ question.get_score }
+      end
+
+      it 'unlikes question' do
+        expect { post :vote, id: question, score: :dislike }
+            .not_to change{ question.get_score }
+      end
+
+      it 'cancel voting for question' do
+        vote_1
+        expect { post :vote, id: question, score: :neutral }
+            .not_to change{ question.get_score }
+      end
+
+      it 'render question view' do
+        post :vote, id: question, score: :like
+        expect(response).to redirect_to question_path question
+      end
+    end
   end
 end
