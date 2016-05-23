@@ -42,10 +42,13 @@ class QuestionsController < ApplicationController
   end
 
   def vote
-    redirect_to @question if current_user.id == @question.user_id
-    @question.vote(current_user, params[:score])
-
-    render :show
+    p params[:score]
+    if current_user.id == @question.user_id
+      redirect_to @question 
+    else
+      @question.vote(current_user, params[:score])
+      render :show
+    end
   end
 
   private
