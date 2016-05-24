@@ -12,13 +12,14 @@ class Question < ActiveRecord::Base
   validates :title, :body, :user_id, presence: true
 
   def vote(user, score)
-    if (vote = self.votes.find_by_user_id(user))
+    if vote = self.votes.find_by_user_id(user)
       if Vote.respond_to?(score) && Vote.scores.to_s.include?(score)
         vote.public_send("#{score}!")
       end
     else
-      self.votes.create(user: user, score: score)
+      vote = self.votes.create(user: user, score: score)
     end
+    vote
   end
 
   def get_score

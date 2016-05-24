@@ -42,12 +42,11 @@ class QuestionsController < ApplicationController
   end
 
   def vote
-    p params[:score]
     if current_user.id == @question.user_id
-      redirect_to @question 
+      redirect_to @question
     else
-      @question.vote(current_user, params[:score])
-      render :show
+      @vote = @question.vote(current_user, params[:score])
+      render json: { id: @question.id, score: @vote, total_score: @question.get_score }
     end
   end
 
