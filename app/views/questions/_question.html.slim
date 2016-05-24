@@ -1,10 +1,6 @@
 .question
   h1= @question.title
   p= @question.body
-  
-  p 
-    |Score: 
-    =@question.get_score
 
   p Attachments:
   ul
@@ -20,5 +16,4 @@
 
     == render 'form'
 
-  - if (@question.user != current_user) and signed_in?  
-    == render 'voting'
+  == render 'voting', obj: @question

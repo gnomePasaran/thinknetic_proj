@@ -1,6 +1,16 @@
 .voting
-  - vote = @question.get_vote(current_user)
-  - vote = Vote.new if vote.nil?
-  = link_to 'Vote +', vote_question_path(@question, score: 'like'), method: :post, remote: true unless vote.like?
-  = link_to 'Cancel', vote_question_path(@question, score: 'neutral'), method: :post, remote: true if vote.like? || vote.dislike?
-  = link_to 'Vote - ', vote_question_path(@question, score: 'dislike'), method: :post, remote: true unless vote.dislike?
+  |Score:&nbsp
+  .score
+    =@question.get_score
+
+  - if (@question.user != current_user) and signed_in?
+
+    - vote = @question.get_vote(current_user)
+    - vote = Vote.new if vote.nil?
+    p.vote-cancel style="#{ vote.neutral? ? 'display:none' : ' ' }"
+      = link_to 'Cancel', vote_question_path(@question, score: 'neutral'), method: :post, data: { type: :json }, remote: true
+
+    p.vote-plus style="#{ vote.like? ? 'display:none' : ' ' }"
+      = link_to 'Vote +', vote_question_path(@question, score: 'like'), method: :post, data: { type: :json }, remote: true
+    p.vote-minus style="#{ vote.dislike? ? 'display:none' : ' ' }"
+      = link_to 'Vote - ', vote_question_path(@question, score: 'dislike'), method: :post, data: { type: :json }, remote: true
