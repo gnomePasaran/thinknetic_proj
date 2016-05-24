@@ -1,16 +1,17 @@
 .voting
   |Score:&nbsp
   .score
-    =@question.get_score
+    =obj.get_score
 
-  - if (@question.user != current_user) and signed_in?
+  - if (obj.user != current_user) and signed_in?
 
-    - vote = @question.get_vote(current_user)
+    - vote = obj.get_vote(current_user)
     - vote = Vote.new if vote.nil?
-    p.vote-cancel style="#{ vote.neutral? ? 'display:none' : ' ' }"
-      = link_to 'Cancel', vote_question_path(@question, score: 'neutral'), method: :post, data: { type: :json }, remote: true
+
+    p.vote-cancel style="#{ (vote.neutral? || vote.new_record?) ? 'display:none' : ' ' }"
+      = link_to 'Cancel', polymorphic_path([:vote, poly_path].flatten, score: 'neutral'), method: :post, data: { type: :json }, remote: true
 
     p.vote-plus style="#{ vote.like? ? 'display:none' : ' ' }"
-      = link_to 'Vote +', vote_question_path(@question, score: 'like'), method: :post, data: { type: :json }, remote: true
+      = link_to 'Vote +', polymorphic_path([:vote, poly_path].flatten, score: 'like'), method: :post, data: { type: :json }, remote: true
     p.vote-minus style="#{ vote.dislike? ? 'display:none' : ' ' }"
-      = link_to 'Vote - ', vote_question_path(@question, score: 'dislike'), method: :post, data: { type: :json }, remote: true
+      = link_to 'Vote -', polymorphic_path([:vote, poly_path].flatten, score: 'dislike'), method: :post, data: { type: :json }, remote: true

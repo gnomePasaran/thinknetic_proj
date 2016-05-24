@@ -22,3 +22,5 @@
         p= link_to('Unmark best', toggle_best_question_answer_path(@question, answer))
       - else
         p= link_to('Mark best', toggle_best_question_answer_path(@question, answer))
+
+    == render 'questions/voting', obj: answer, poly_path: [@question, answer]

@@ -1,8 +1,8 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :load_answer, only: [:edit, :update, :destroy, :access, :toggle_best]
-  before_action :load_question, only: [:create, :update, :destroy, :access, :toggle_best]
+  before_action :load_answer, only: [:edit, :update, :destroy, :access, :toggle_best, :vote]
+  before_action :load_question, only: [:create, :update, :destroy, :access, :toggle_best, :vote]
   before_action :access, only: [:update, :destroy]
 
   def new
@@ -30,6 +30,15 @@ class AnswersController < ApplicationController
   def toggle_best
     @answer.toggle_best if current_user.id == @question.user_id
     redirect_to @question
+  end
+
+  def vote
+    if current_user.id == @answer.user_id
+      redirect_to @question
+    else
+      @vote = @answer.vote(current_user, params[:score])
+      render json: { id: @answer.id, score: @vote, total_score: @answer.get_score }
+    end
   end
 
   private
