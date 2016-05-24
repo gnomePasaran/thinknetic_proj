@@ -5,15 +5,23 @@ module Votable
     has_many :votes, as: :votable, dependent: :destroy
   end
 
-  def vote(user, score)
-    if vote = self.votes.find_by_user_id(user)
-      if Vote.respond_to?(score) && Vote.scores.to_s.include?(score)
-        vote.public_send("#{score}!")
-      end
+  def vote_up(user)
+    vote = votes.find_or_initialize_by(user: user)
+    vote.like!
+  end
+
+  def vote_down(user)
+    vote = votes.find_or_initialize_by(user: user)
+    vote.dislike!
+  end
+
+
+  def vote_cancel(user)
+    if vote = votes.find_by(user: user)
+      vote.destroy
     else
-      vote = self.votes.create(user: user, score: score)
+      false
     end
-    vote
   end
 
   def get_score

@@ -5,13 +5,10 @@
 
   - if (obj.user != current_user) and signed_in?
 
-    - vote = obj.get_vote(current_user)
-    - vote = Vote.new if vote.nil?
-
     p.vote-cancel style="#{ (vote.neutral? || vote.new_record?) ? 'display:none' : ' ' }"
-      = link_to 'Cancel', polymorphic_path([:vote, poly_path].flatten, score: 'neutral'), method: :post, data: { type: :json }, remote: true
+      = link_to 'Cancel', polymorphic_path([:vote_cancel, poly_path].flatten), method: :post, data: { type: :json }, remote: true
 
     p.vote-plus style="#{ vote.like? ? 'display:none' : ' ' }"
-      = link_to 'Vote +', polymorphic_path([:vote, poly_path].flatten, score: 'like'), method: :post, data: { type: :json }, remote: true
+      = link_to 'Vote +', polymorphic_path([:vote_up, poly_path].flatten), method: :post, data: { type: :json }, remote: true
     p.vote-minus style="#{ vote.dislike? ? 'display:none' : ' ' }"
-      = link_to 'Vote -', polymorphic_path([:vote, poly_path].flatten, score: 'dislike'), method: :post, data: { type: :json }, remote: true
+      = link_to 'Vote -', polymorphic_path([:vote_down, poly_path].flatten), method: :post, data: { type: :json }, remote: true
