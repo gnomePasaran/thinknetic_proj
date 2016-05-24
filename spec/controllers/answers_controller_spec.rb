@@ -190,12 +190,12 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'likes question' do
-        expect { post :vote, id: not_owner_answer, question_id: question, score: :like }
+        expect { post :vote_up, id: not_owner_answer, question_id: question }
             .to change{ not_owner_answer.get_score }.from(0).to(1)
       end
 
       it 'unlikes question' do
-        expect { post :vote, id: not_owner_answer, question_id: question, score: :dislike }
+        expect { post :vote_down, id: not_owner_answer, question_id: question, score: :dislike }
             .to change{ not_owner_answer.get_score }.from(0).to(-1)
       end
 

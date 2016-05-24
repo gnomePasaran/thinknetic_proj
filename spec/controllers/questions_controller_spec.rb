@@ -172,18 +172,18 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'likes question' do
-        expect { post :vote, id: owner_question, score: :like }
+        expect { post :vote_up, id: owner_question }
             .to change{ owner_question.get_score }.from(0).to(1)
       end
 
       it 'unlikes question' do
-        expect { post :vote, id: owner_question, score: :dislike }
+        expect { post :vote_down, id: owner_question }
             .to change{ owner_question.get_score }.from(0).to(-1)
       end
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote, id: owner_question, score: :neutral }
+        expect { post :vote_cancel, id: owner_question }
             .to change{ owner_question.get_score }.from(1).to(0)
       end
     end
@@ -196,23 +196,23 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'likes question' do
-        expect { post :vote, id: question, score: :like }
+        expect { post :vote_up, id: question }
             .not_to change{ question.get_score }
       end
 
       it 'unlikes question' do
-        expect { post :vote, id: question, score: :dislike }
+        expect { post :vote_down, id: question }
             .not_to change{ question.get_score }
       end
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote, id: question, score: :neutral }
+        expect { post :vote_cancel, id: question }
             .not_to change{ question.get_score }
       end
 
       it 'render question view' do
-        post :vote, id: question, score: :like
+        post :vote_up, id: question
         expect(response).to redirect_to question_path question
       end
     end
