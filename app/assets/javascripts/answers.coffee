@@ -12,3 +12,21 @@ $ ->
     $('.edit-answer-link').show()
     $('.edit_answer_form').hide()
 
+  $(document).on 'ajax:success', '.answers', (e, data, status, xhr) ->
+    console.log(xhr.responseJSON.score)
+    if xhr.responseJSON.score.score == 'like'
+      $('#answer-' + xhr.responseJSON.id + ' .vote-plus').hide()
+
+      $('#answer-' + xhr.responseJSON.id + ' .vote-cancel').show()
+      $('#answer-' + xhr.responseJSON.id + ' .vote-minus').show()
+    else if xhr.responseJSON.score.score == 'neutral'
+      $('#answer-' + xhr.responseJSON.id + ' .vote-cancel').hide()
+
+      $('#answer-' + xhr.responseJSON.id + ' .vote-plus').show()
+      $('#answer-' + xhr.responseJSON.id + ' .vote-minus').show()
+    else
+      $('#answer-' + xhr.responseJSON.id + ' .vote-minus').hide()
+
+      $('#answer-' + xhr.responseJSON.id + ' .vote-plus').show()
+      $('#answer-' + xhr.responseJSON.id + ' .vote-cancel').show()
+    $('#answer-' + xhr.responseJSON.id + ' .score').replaceWith('<p class="score">' + xhr.responseJSON.total_score + '</p>')
