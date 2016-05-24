@@ -186,11 +186,6 @@ RSpec.describe QuestionsController, type: :controller do
         expect { post :vote, id: owner_question, score: :neutral }
             .to change{ owner_question.get_score }.from(1).to(0)
       end
-
-      it 'render question view' do
-        post :vote, id: owner_question, score: :like
-        expect(response).to render_template :show
-      end
     end
 
     context 'Athor of the question try to' do
