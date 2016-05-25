@@ -8,11 +8,13 @@ module Votable
   def vote_up(user)
     vote = votes.find_or_initialize_by(user: user)
     vote.like!
+    vote
   end
 
   def vote_down(user)
     vote = votes.find_or_initialize_by(user: user)
     vote.dislike!
+    vote
   end
 
 
@@ -25,11 +27,11 @@ module Votable
   end
 
   def get_score
-    self.votes.sum(:score)
+    votes.sum(:score)
   end
 
   def get_vote(user)
-    self.votes.find_by_user_id(user)
+    votes.find_by_user_id(user)
   end
 
 end
