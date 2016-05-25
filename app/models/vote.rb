@@ -4,6 +4,6 @@ class Vote < ActiveRecord::Base
   belongs_to :votable, polymorphic: true
 
   validates :user_id, :score, presence: true
-
-  enum score: { like: 1, neutral: 0, dislike: -1 }
+  validates :votable_id, uniqueness: { scope: [:votable_type, :user_id] }
+  validates :score, inclusion: { in: [-1, 1] }
 end

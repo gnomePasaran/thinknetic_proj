@@ -8,12 +8,12 @@ module Voted
 
   def vote_up
     vote = @votable.vote_up(current_user)
-    render json: { id: @votable.id, score: vote, total_score: @votable.get_score }
+    render json: { id: @votable.id, score: vote.score, total_score: @votable.get_score }
   end
 
   def vote_down
     vote = @votable.vote_down(current_user)
-    render json: { id: @votable.id, score: vote, total_score: @votable.get_score }
+    render json: { id: @votable.id, score: vote.score, total_score: @votable.get_score }
   end
 
   def vote_cancel

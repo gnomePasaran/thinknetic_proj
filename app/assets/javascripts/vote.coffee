@@ -5,12 +5,13 @@
 $ ->
   $(document).on 'ajax:success', '.voting', (e, data, status, xhr) ->
     elem = $(e.target).data('entity-type') + '_' + xhr.responseJSON.id
-    if xhr.responseJSON.score.score == 'like'
+
+    if xhr.responseJSON.score == 1
       $('#votable-' + elem + ' .vote-plus').hide()
 
       $('#votable-' + elem + ' .vote-cancel').show()
       $('#votable-' + elem + ' .vote-minus').show()
-    else if xhr.responseJSON.score.score == 'dislike'
+    else if xhr.responseJSON.score == -1
       $('#votable-' + elem + ' .vote-minus').hide()
 
       $('#votable-' + elem + ' .vote-plus').show()

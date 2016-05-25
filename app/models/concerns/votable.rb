@@ -7,13 +7,13 @@ module Votable
 
   def vote_up(user)
     vote = votes.find_or_initialize_by(user: user)
-    vote.like!
+    vote.update(score: 1)
     vote
   end
 
   def vote_down(user)
     vote = votes.find_or_initialize_by(user: user)
-    vote.dislike!
+    vote.update(score: -1)
     vote
   end
 

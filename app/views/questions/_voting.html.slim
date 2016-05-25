@@ -10,9 +10,9 @@
       = link_to 'Cancel', polymorphic_path([:vote_cancel, poly_path].flatten), method: :post, \
           data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
 
-    p.vote-plus style="#{ vote.like? ? 'display:none' : ' ' if vote.present? }"
+    p.vote-plus style="#{ vote.score > 0 ? 'display:none' : ' ' if vote.present? }"
       = link_to 'Vote +', polymorphic_path([:vote_up, poly_path].flatten), method: :post, \
           data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
-    p.vote-minus style="#{ vote.dislike? ? 'display:none' : ' ' if vote.present? }"
+    p.vote-minus style="#{ vote.score < 0 ? 'display:none' : ' ' if vote.present? }"
       = link_to 'Vote -', polymorphic_path([:vote_down, poly_path].flatten), method: :post, \
           data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
