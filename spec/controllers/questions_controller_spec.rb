@@ -213,7 +213,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'render question view' do
         post :vote_up, id: question
-        expect(response).to redirect_to question_path question
+        expect(response.status).to eq 403
       end
     end
   end

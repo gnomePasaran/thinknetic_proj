@@ -201,7 +201,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote, id: not_owner_answer, question_id: question, score: :neutral }
+        expect { post :vote_cancel, id: not_owner_answer, question_id: question, score: :neutral }
             .to change{ not_owner_answer.get_score }.from(1).to(0)
       end
     end
@@ -214,24 +214,24 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'likes question' do
-        expect { post :vote, id: owner_answer, question_id: question, score: :like }
+        expect { post :vote_up, id: owner_answer, question_id: question, score: :like }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'unlikes question' do
-        expect { post :vote, id: owner_answer, question_id: question, score: :dislike }
+        expect { post :vote_down, id: owner_answer, question_id: question, score: :dislike }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote, id: owner_answer, question_id: question, score: :neutral }
+        expect { post :vote_cancel, id: owner_answer, question_id: question, score: :neutral }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'render question view' do
-        post :vote, id: owner_answer, question_id: question, score: :like
-        expect(response).to redirect_to question_path question
+        post :vote_up, id: owner_answer, question_id: question, score: :like
+        expect(response.status).to eq 403
       end
     end
   end
