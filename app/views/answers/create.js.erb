@@ -3,10 +3,8 @@
     $('.answer-errors').before('<%= j message %>');
   <% end %>
 <% else %>
-  <% if remotipart_submitted? %>
-    $('.answers').append("<%= j "#{ render 'answers/answer', answer: @answer }" %>");
-  <% else %>
-    $('.answers').append("<%= j render 'answers/answer', answer: @answer %>");
-  <% end %>
-  $('#answer_body').val('');
+    <% publish_to "/questions/#{@question.id}/answer" do %>
+      $('.answers').append("<%= j render 'answers/answer', answer: @answer %>");
+    <% end %>
+  $('.new_answer_form #answer_body').val('');
 <% end %>
