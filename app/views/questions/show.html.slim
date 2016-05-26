@@ -6,3 +6,5 @@
 
 - if signed_in?
   == render 'answers/form', answer: @answer, button_text: 'Create answer', class_form: 'new_answer_form'
+
+= subscribe_to "/questions/#{@question.id}/answer"
