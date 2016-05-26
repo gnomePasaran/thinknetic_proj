@@ -4,6 +4,8 @@ class QuestionsController < ApplicationController
   before_action :load_question, only: [:edit, :show, :update, :destroy, :access]
   before_action :access, only: [:update, :destroy]
 
+  include Voted
+
   def index
     @questions = Question.all
   end

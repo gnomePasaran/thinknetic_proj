@@ -11,4 +11,3 @@ $ ->
   $(document).on 'ajax:success', '.edit_answer_form', (data, status, xhr) ->
     $('.edit-answer-link').show()
     $('.edit_answer_form').hide()
-

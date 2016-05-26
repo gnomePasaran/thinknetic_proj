@@ -7,6 +7,8 @@ RSpec.describe QuestionsController, type: :controller do
   let(:owner_question) { create(:question, user: @user) }
   let(:not_owner_question) { create(:question, user: not_author) }
   let(:answer) { create(:answer, question: owner_question, user: not_author) }
+  let(:vote_1) { create(:vote_question, votable: owner_question, user: not_author, score: 1) }
+
 
   describe 'GET #index' do
     let(:questions) { create_pair(:question) }
@@ -155,6 +157,63 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirects to index view' do
         delete :destroy, id: not_owner_question
         expect(response).to redirect_to question_path
+      end
+    end
+  end
+
+  describe 'POST #vote' do
+    sign_in_user
+
+    context 'user likes the question' do
+
+      before do
+        owner_question
+        sign_in(not_author)
+      end
+
+      it 'likes question' do
+        expect { post :vote_up, id: owner_question }
+            .to change{ owner_question.get_score }.from(0).to(1)
+      end
+
+      it 'unlikes question' do
+        expect { post :vote_down, id: owner_question }
+            .to change{ owner_question.get_score }.from(0).to(-1)
+      end
+
+      it 'cancel voting for question' do
+        vote_1
+        expect { post :vote_cancel, id: owner_question }
+            .to change{ owner_question.get_score }.from(1).to(0)
+      end
+    end
+
+    context 'Athor of the question try to' do
+
+      before do
+        question
+        sign_in(user)
+      end
+
+      it 'likes question' do
+        expect { post :vote_up, id: question }
+            .not_to change{ question.get_score }
+      end
+
+      it 'unlikes question' do
+        expect { post :vote_down, id: question }
+            .not_to change{ question.get_score }
+      end
+
+      it 'cancel voting for question' do
+        vote_1
+        expect { post :vote_cancel, id: question }
+            .not_to change{ question.get_score }
+      end
+
+      it 'render question view' do
+        post :vote_up, id: question
+        expect(response.status).to eq 403
       end
     end
   end

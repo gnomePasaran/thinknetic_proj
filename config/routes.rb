@@ -2,8 +2,16 @@ Rails.application.routes.draw do
   devise_for :users
   root to: 'questions#index'
 
-  resources :questions do
-    resources :answers, except: ['index', 'show'] do
+  concern :votable do
+    member do
+      post :vote_up
+      post :vote_down
+      post :vote_cancel
+    end
+  end
+
+  resources :questions, concerns: :votable do
+    resources :answers, except: ['index', 'show'], concerns: :votable do
       member do
         get :toggle_best
       end

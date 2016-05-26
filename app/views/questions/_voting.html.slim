@@ -1,0 +1,18 @@
+.voting id="votable-#{dom_id(obj)}"
+  |Score:&nbsp
+  .score
+    =obj.get_score
+
+  - if (obj.user != current_user) and signed_in?
+    - vote = obj.get_vote(current_user)
+
+    p.vote-cancel style="#{ vote ? ' ' : 'display:none' }"
+      = link_to 'Cancel', polymorphic_path([:vote_cancel, poly_path].flatten), method: :post, \
+          data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
+
+    p.vote-plus style="#{ vote.score > 0 ? 'display:none' : ' ' if vote.present? }"
+      = link_to 'Vote +', polymorphic_path([:vote_up, poly_path].flatten), method: :post, \
+          data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
+    p.vote-minus style="#{ vote.score < 0 ? 'display:none' : ' ' if vote.present? }"
+      = link_to 'Vote -', polymorphic_path([:vote_down, poly_path].flatten), method: :post, \
+          data: { type: :json, entity_type: obj.class.name.underscore }, remote: true

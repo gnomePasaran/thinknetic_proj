@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create, :update, :destroy, :access, :toggle_best]
   before_action :access, only: [:update, :destroy]
 
+  include Voted
+
   def new
     @answer = Answer.new
   end

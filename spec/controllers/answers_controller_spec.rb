@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:user) { create(:user) }
   let(:not_author) { create(:user) }
   let(:question) { create(:question, user: @user) }
   let(:answer) { create(:answer, question: question) }
   let(:owner_answer) { create(:answer, question: question, user: @user) }
   let(:not_owner_answer) { create(:answer, question: question, user: not_author) }
   let(:not_owner_question) { create(:question, user: not_author) }
+  let(:vote_1) { create(:vote_answer, votable: not_owner_answer, user: user, score: 1) }
 
 
   describe 'GET #new' do
@@ -158,7 +160,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'owner marks not his answer' do
       it 'marks answer' do
         get :toggle_best, id: not_owner_answer, question_id: question
-        expect{ not_owner_answer.reload }.to change{ not_owner_answer.is_best }.from(false).to(true)    
+        expect{ not_owner_answer.reload }.to change{ not_owner_answer.is_best }.from(false).to(true)
       end
     end
 
@@ -173,6 +175,63 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'renders new order of question' do
         expect(response).to redirect_to not_owner_question
+      end
+    end
+  end
+
+  describe 'POST #vote' do
+    sign_in_user
+
+    context 'user likes the question' do
+
+      before do
+        not_owner_answer
+        sign_in(user)
+      end
+
+      it 'likes question' do
+        expect { post :vote_up, id: not_owner_answer, question_id: question }
+            .to change{ not_owner_answer.get_score }.from(0).to(1)
+      end
+
+      it 'unlikes question' do
+        expect { post :vote_down, id: not_owner_answer, question_id: question, score: :dislike }
+            .to change{ not_owner_answer.get_score }.from(0).to(-1)
+      end
+
+      it 'cancel voting for question' do
+        vote_1
+        expect { post :vote_cancel, id: not_owner_answer, question_id: question, score: :neutral }
+            .to change{ not_owner_answer.get_score }.from(1).to(0)
+      end
+    end
+
+    context 'Athor of the question try to' do
+
+      before do
+        owner_answer
+        sign_in(@user)
+      end
+
+      it 'likes question' do
+        expect { post :vote_up, id: owner_answer, question_id: question, score: :like }
+            .not_to change{ owner_answer.get_score }
+      end
+
+      it 'unlikes question' do
+        expect { post :vote_down, id: owner_answer, question_id: question, score: :dislike }
+            .not_to change{ owner_answer.get_score }
+      end
+
+      it 'cancel voting for question' do
+        vote_1
+        expect { post :vote_cancel, id: owner_answer, question_id: question, score: :neutral }
+            .not_to change{ owner_answer.get_score }
+      end
+
+      it 'render question view' do
+        post :vote_up, id: owner_answer, question_id: question, score: :like
+        expect(response.status).to eq 403
       end
     end
   end
