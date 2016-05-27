@@ -3,5 +3,6 @@ module Commentable
 
   included do
     has_many :comments, as: :commentable, dependent: :destroy
+    has_many :comments, -> { order(created_at: :asc) }, as: :commentable, dependent: :destroy
   end
 end
