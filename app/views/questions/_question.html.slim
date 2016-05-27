@@ -1,4 +1,4 @@
-.question
+.question data-question-id="#{@question.id}"
   h1= @question.title
   p= @question.body
 
@@ -17,3 +17,6 @@
     == render 'form'
 
   == render 'voting', obj: @question, poly_path: @question
+
+  .question-comments
+    == render 'comments', obj: @question, poly_path: [@question]
