@@ -1,0 +1,15 @@
+.question data-question-id="#{@question.id}"
+  h1= @question.title
+  p= @question.body
+
+  p Attachments:
+  ul
+    - @question.attachments.each do |a|
+      li= link_to a.file.identifier, a.file.url
+
+    .question-errors
+
+  == render 'voting', obj: @question, poly_path: @question
+
+  .question-comments
+    == render 'questions/shared/comments', obj: @question, poly_path: [@question]

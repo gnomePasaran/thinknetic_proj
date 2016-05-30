@@ -3,7 +3,9 @@
     $('.answer-errors').before('<%= j message %>');
   <% end %>
 <% else %>
-    <% publish_to "/questions/#{@question.id}/answer" do %>
-      $('#answer-<%= @answer.id %>').replaceWith("<%= j render 'answers/answer', answer: @answer %>")
-    <% end %>
+  <% if remotipart_submitted? %>
+    $('#answer-<%= @answer.id %>').replaceWith("<%= j "#{ render 'answers/answer', answer: @answer }" %>")
+  <% else %>
+    $('#answer-<%= @answer.id %>').replaceWith("<%= j render 'answers/answer', answer: @answer %>")
+  <% end %>
 <% end %>

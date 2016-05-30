@@ -27,15 +27,11 @@ class QuestionsController < ApplicationController
     @question = Question.new(question_params)
     @question.user = current_user
 
-    respond_to do |format|
-      if @question.save
-        format.html do
-          PrivatePub.publish_to '/questions', question: @question.to_json
-          redirect_to @question
-        end
-      else
-        format.html { render :new }
-      end
+    if @question.save
+      PrivatePub.publish_to '/questions', question: @question.to_json
+      redirect_to @question
+    else
+      render :new
     end
   end
 

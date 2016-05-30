@@ -23,7 +23,7 @@
       - else
         p= link_to('Mark best', toggle_best_question_answer_path(@question, answer))
 
-    == render 'questions/voting', obj: answer, poly_path: [@question, answer]
+    == render 'questions/voting', obj: answer, poly_path: [answer.question, answer]
 
     .answer-comments
-      == render 'questions/comments', obj: answer, poly_path: [@question, answer]
+      == render 'questions/comments', obj: answer, poly_path: [answer.question, answer]

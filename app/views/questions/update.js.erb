@@ -3,7 +3,21 @@
     $('.question-errors').before('<%= j message %>');
   <% end %>
 <% else %>
+  <% if remotipart_submitted? %>
+    if (($('.comet').data('userId')) == "<%= current_user.id %>") {
+      $('.question').replaceWith("<%= j "#{ render 'questions/question' }" %>");
+    };
+  <% else %>
+    if (($('.comet').data('userId')) == "<%= current_user.id %>") {
+      $('.question').replaceWith("<%= j render 'questions/question' %>");
+    }
+  <% end %>
+
   <% publish_to "/questions/#{@question.id}/answer" do %>
-    $('.question').replaceWith("<%= j render 'questions/question' %>");
+    if (($('.comet').data('userId')) != "<%= current_user.id %>") {
+      $('.question').replaceWith("<%= j render 'questions/shared/question' %>");
+      if ($('.comet').data('signedIn') == false) { $('.commets-form').hide() }
+      if (($('.comet').data('signedIn') == true) && $('.comet').data('userId') == "<%= @question.id %>") { $('.comet-vote').show() }
+    };
   <% end %>
 <% end %>

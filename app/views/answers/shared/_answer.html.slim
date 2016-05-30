@@ -1,0 +1,22 @@
+.answer id="answer-#{answer.id}"
+  .answer-text id="answer-text-#{answer.id}"
+    p =answer.body
+
+  - if answer.persisted?
+    p Attachments:
+    ul
+      - answer.attachments.each do |a|
+        li= link_to a.file.file.filename, a.file.url
+
+    - if (@question.user == current_user) and user_signed_in?
+      .comet-best
+        - if answer.is_best?
+          p THE BEST
+          p= link_to('Unmark best', toggle_best_question_answer_path(@question, answer))
+        - else
+          p= link_to('Mark best', toggle_best_question_answer_path(@question, answer))
+
+    == render 'questions/voting', obj: answer, poly_path: [answer.question, answer]
+
+    .answer-comments
+      == render 'questions/shared/comments', obj: answer, poly_path: [answer.question, answer]

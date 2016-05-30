@@ -3,8 +3,23 @@
     $('.answer-errors').before('<%= j message %>');
   <% end %>
 <% else %>
-    <% publish_to "/questions/#{@question.id}/answer" do %>
+  <% if remotipart_submitted? %>
+    if (($('.comet').data('userId')) == "<%= current_user.id %>") {
+      $('.answers').append("<%= j "#{ render 'answers/answer', answer: @answer }" %>");
+    }
+  <% else %>
+    if (($('.comet').data('userId')) == "<%= current_user.id %>") {
       $('.answers').append("<%= j render 'answers/answer', answer: @answer %>");
-    <% end %>
+    }
+  <% end %>
+
+  <% publish_to "/questions/#{@question.id}/answer" do %>
+    if (($('.comet').data('userId')) != "<%= current_user.id %>") {
+      $('.question').append("<%= j render 'answers/shared/answer', answer: @answer %>");
+      if ($('.comet').data('signedIn') == false) { $('.commets-form').hide() }
+      if ($('.comet').data('userId') != "<%= @answer.question.id %>") { $('.commets-best').hide() }
+      if (($('.comet').data('signedIn') == true) && $('.comet').data('userId') == "<%= @question.id %>") { $('.comet-vote').show() }
+    };
+  <% end %>
   $('.new_answer_form #answer_body').val('');
 <% end %>
