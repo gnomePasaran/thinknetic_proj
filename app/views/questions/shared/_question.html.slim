@@ -7,16 +7,9 @@
     - @question.attachments.each do |a|
       li= link_to a.file.identifier, a.file.url
 
-
-  - if (@question.user == current_user) and signed_in?
-    = link_to 'Edit question', '', class: 'edit-question-link'
-    = link_to 'Delete question', question_path(@question), method: :delete
-
     .question-errors
-
-    == render 'form'
 
   == render 'voting', obj: @question, poly_path: @question
 
   .question-comments
-    == render 'comments', obj: @question, poly_path: [@question]
+    == render 'questions/shared/comments', obj: @question, poly_path: [@question]

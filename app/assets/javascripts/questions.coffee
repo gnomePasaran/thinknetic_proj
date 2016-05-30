@@ -10,3 +10,8 @@ $ ->
   $(document).on 'ajax:success', '#question-form', (data, status, xhr) ->
     $('.edit-question-link').show()
     $('form#question-form').hide()
+
+  PrivatePub.subscribe '/questions', (data, channel) ->
+    question = $.parseJSON(data['question'])
+    $('#questions tbody')
+      .prepend('<tr><td class="title"><a href="/questions/' + question.id + '">' + question.title + '</a></td></tr>')

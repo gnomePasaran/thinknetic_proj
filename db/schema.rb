@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160523123056) do
+ActiveRecord::Schema.define(version: 20160526130904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,18 @@ ActiveRecord::Schema.define(version: 20160523123056) do
   end
 
   add_index "attachments", ["attachable_id", "attachable_type"], name: "index_attachments_on_attachable_id_and_attachable_type", using: :btree
+
+  create_table "comments", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+    t.text     "body"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.string   "title"
@@ -69,7 +81,5 @@ ActiveRecord::Schema.define(version: 20160523123056) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
-
-  add_index "votes", ["user_id", "votable_id", "votable_type"], name: "index_votes_on_user_id_and_votable_id_and_votable_type", unique: true, using: :btree
 
 end

@@ -1,4 +1,4 @@
-require_relative 'acceptance_helper'
+require_relative '../acceptance_helper'
 
 feature 'Question editing', %q{
   In order to fix mistake
@@ -20,8 +20,8 @@ feature 'Question editing', %q{
     before do
       sign_in(user)
       visit question_path(question)
-    end 
-  
+    end
+
     scenario 'Author sees edit link' do
       expect(page).to have_link 'Edit question'
     end
@@ -34,7 +34,7 @@ feature 'Question editing', %q{
       expect(page).to have_content 'Edited question'
       expect(page).to have_link 'Edit question'
     end
-    
+
     scenario 'Author try to edit his question with invalid attributes', js: true do
       click_on 'Edit'
       fill_in 'Your question', with: ''
@@ -43,7 +43,7 @@ feature 'Question editing', %q{
       expect(page).to have_content 'Title can\'t be blank'
     end
   end
-  
+
   scenario 'Authentificated user try to edit not his answer' do
     sign_in(not_owner)
 
