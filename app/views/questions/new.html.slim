@@ -13,7 +13,7 @@
   p Attachments:
   p
     #attachments
-      = f.fields_for :attachments do |a|
+      = f.fields_for :attachments, @question.attachments.build do |a|
         = render 'attachment_fields', f: a
 
       .links
