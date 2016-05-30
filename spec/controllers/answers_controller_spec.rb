@@ -11,32 +11,6 @@ RSpec.describe AnswersController, type: :controller do
   let(:vote_1) { create(:vote_answer, votable: not_owner_answer, user: user, score: 1) }
 
 
-  describe 'GET #new' do
-    sign_in_user
-    before { get :new, question_id: question }
-
-    it 'assigns a new question to @question' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
-
-  describe 'GET #edit' do
-    sign_in_user
-    before { get :edit, id: answer, question_id: question }
-
-    it 'assigns a requested question to @question' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'POST #create' do
     sign_in_user
     context 'with valid attributes' do
