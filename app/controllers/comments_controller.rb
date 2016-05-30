@@ -3,27 +3,24 @@ class CommentsController < ActionController::Base
 
   before_action :set_commentable, only: [:create]
   before_action :set_comment, only: [:create]
+  after_action  :publicate_comment, only: [:create]
+
+  respond_to :json
 
   def create
-    @comment = @commentable.comments.new(set_comment)
-    @comment.user = current_user
+    @comment = @commentable.comments.create(set_comment.merge(user_id: current_user.id))
+    @channel = @commentable.question if commentable_name == 'answers'
+    @channel ||= @commentable
 
-    if commentable_name == 'answers'
-      channel = @commentable.question
-    else
-      channel = @commentable
-    end
-    respond_to do |format|
-      @comment.save
-      format.html do
-        PrivatePub.publish_to "/questions/#{channel.id}/answer",
-            comment: @comment.to_json, commentable: "#{commentable_name.singularize}_#{@commentable.id}"
-        render nothing: true
-      end
-    end
+    respond_with @channel
   end
 
   private
+
+  def publicate_comment
+    PrivatePub.publish_to "/questions/#{@channel.id}/answer",
+        comment: @comment.to_json, commentable: "#{commentable_name.singularize}_#{@commentable.id}"
+  end
 
   def set_comment
     params.require(:comment).permit(:body)
