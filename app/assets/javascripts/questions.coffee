@@ -15,3 +15,10 @@ $ ->
     question = $.parseJSON(data['question'])
     $('#questions tbody')
       .prepend('<tr><td class="title"><a href="/questions/' + question.id + '">' + question.title + '</a></td></tr>')
+
+  questionId = $('.question').data('questionId')
+  PrivatePub.subscribe '/questions/' + questionId + '/answer' , (data, channel) ->
+    question = $.parseJSON(data['question'])
+    console.log question
+    # console.log JST
+    $('.question').replaceWith(JST["question"](question))

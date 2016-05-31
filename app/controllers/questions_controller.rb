@@ -4,10 +4,12 @@ class QuestionsController < ApplicationController
   before_action :load_question, only: [:edit, :show, :update, :destroy, :access]
   before_action :access, only: [:update, :destroy]
   after_action  :publicate_question, only: :create
+  after_action  :edit_question, only: :update
 
   include Voted
 
   respond_to :js
+  # respond_to :json, only: :update
 
   def index
     respond_with(@questions = Question.all)
@@ -40,6 +42,10 @@ class QuestionsController < ApplicationController
 
   def publicate_question
     PrivatePub.publish_to '/questions', question: @question.to_json if @question.errors.empty?
+  end
+
+  def edit_question
+    PrivatePub.publish_to "/questions/#{@question.id}/answer", question: @question.to_json if @question.errors.empty?
   end
 
   def load_question

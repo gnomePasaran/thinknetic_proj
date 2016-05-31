@@ -1,0 +1,14 @@
+.answer_form_wrapper
+  .answer_errors
+
+  form.edit_answer id="question-form" action="/questions/#{id}" data-remote="true" method="post" accepts-charset="UTF-8"
+    input name="utf8" type="hidden" value="✓"
+    input type="hidden" name="_method" value="patch"
+
+    label for="question_title" Title
+    input id="question_title" name="question[title]"
+
+    label for="question_body" Body
+    textarea id="question_body" name="question[title]"
+
+    input type="submit" name="commit" value="Save edits"
