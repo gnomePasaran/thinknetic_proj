@@ -19,7 +19,7 @@ class CommentsController < ActionController::Base
 
   def publicate_comment
     PrivatePub.publish_to "/questions/#{@channel.id}/answer",
-        comment: @comment.to_json, commentable: "#{commentable_name.singularize}_#{@commentable.id}"
+        comment: @comment.to_json, commentable: "#{commentable_name.singularize}_#{@commentable.id}" if @comment.errors.empty?
   end
 
   def set_comment
