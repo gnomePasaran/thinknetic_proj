@@ -29,6 +29,8 @@ gem 'cocoon'
 gem 'private_pub'
 gem 'thin'
 gem 'responders', '~> 2.0'
+gem 'omniauth'
+gem 'omniauth-facebook'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 
