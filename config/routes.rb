@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controller: { omniauth_callbacks: 'omniauth_callbacks' }
   root to: 'questions#index'
 
   concern :votable do
