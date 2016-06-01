@@ -10,9 +10,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :questions, concerns: :votable do
+  resources :questions, concerns: :votable, except: [:edit] do
     resources :comments, only: [:create], defaults: { commentable: 'questions' }
-    resources :answers, except: ['index', 'show'], concerns: :votable do
+    resources :answers, only: [:create, :update, :destroy], concerns: :votable do
       resources :comments, only: [:create], defaults: { commentable: 'answers' }
       member do
         get :toggle_best

@@ -7,26 +7,20 @@ class AnswersController < ApplicationController
 
   include Voted
 
-  def new
-    @answer = Answer.new
-  end
-
-  def edit
-  end
+  respond_to :js 
 
   def create
-    @answer = @question.answers.new(answer_params)
-    @answer.user = current_user
-
-    @answer.save
+    @answer = @question.answers.create(answer_params.merge(user_id: current_user.id))
+    respond_with @answer
   end
 
   def update
     @answer.update(answer_params)
+    respond_with @answer
   end
 
   def destroy
-    @answer.destroy
+    respond_with(@answer.destroy)
   end
 
   def toggle_best

@@ -16,8 +16,8 @@
   <% publish_to "/questions/#{@question.id}/answer" do %>
     if (($('.comet').data('userId')) != "<%= current_user.id %>") {
       $('.question').append("<%= j render 'answers/shared/answer', answer: @answer %>");
-      if ($('.comet').data('signedIn') == false) { $('.commets-form').hide() }
-      if ($('.comet').data('userId') != "<%= @answer.question.id %>") { $('.commets-best').hide() }
+      if ($('.comet').data('signedIn') == false) { $('.comments-form').hide() }
+      if ($('.comet').data('userId') != "<%= @answer.question.id %>") { $('.comet-best').hide() }
       if (($('.comet').data('signedIn') == true) && $('.comet').data('userId') == "<%= @question.id %>") { $('.comet-vote').show() }
     };
   <% end %>
