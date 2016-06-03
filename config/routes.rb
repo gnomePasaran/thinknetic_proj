@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
+
+  patch 'final_signup' => 'registrations#send_confirmation_email', as: :send_confirmation_email
+
   root to: 'questions#index'
 
   concern :votable do
