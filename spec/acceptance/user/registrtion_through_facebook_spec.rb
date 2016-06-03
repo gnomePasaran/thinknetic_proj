@@ -12,7 +12,7 @@ feature 'User sign in', %q{
       click_link "Registration"
       expect(page).to have_content("Sign in with Facebook")
       mock_auth_hash_facebook
-      click_link "Sign in"
+      click_link "Sign in with Facebook"
       expect(page).to have_content("Successfully authenticated from Facebook account.")
       expect(page).to have_content("Logout")
     end
@@ -22,7 +22,7 @@ feature 'User sign in', %q{
       visit root_path
       click_link "Registration"
       expect(page).to have_content("Sign in with Facebook")
-      click_link "Sign in"
+      click_link "Sign in with Facebook"
       expect(page).to have_content('Could not authenticate you from Facebook because "Invalid credentials"')
     end
   end
