@@ -7,5 +7,6 @@ class CreateAuthorizations < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_index :authorizations, [:provider, :uid]
   end
 end
