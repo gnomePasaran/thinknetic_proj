@@ -7,29 +7,44 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :confirmable,
+  devise :database_authenticatable, :registerable, :confirmable,
+         :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, omniauth_providers: [:facebook, :twitter]
 
   def self.find_for_oauth(auth)
-    authorization = Authorization.find_by(provider: auth.provider, uid: auth.uid)
-    return authorization.user if authorization
+    email = auth_email(auth)
+    user = find_by(email: email) if email
 
-    email = auth.try(:info).try(:email)
-    user = User.find_by(email: email)
-    if user
-      user.create_authozation(auth)
+    if user.present?
+      user.create_authorizations(auth)
     elsif email
-      password = Devise.friendly_token[0, 20]
-      user = User.create!(email: email, password: password, password_confirmation: password, confirmed_at: Time.zone.now)
-      user.create_authozation(auth)
+      user = create_user_from_auth(auth)
     else
       user = nil
     end
+
     user
   end
 
-  def create_authozation(auth)
-    self.authorizations.create(provider: auth.provider, uid: auth.uid)
+  def self.create_user_from_auth(auth)
+    user = User.new(email: auth_email(auth), password: Devise.friendly_token[0, 20])
+    user.skip_confirmation!
+    user.save!
+    user.create_authorizations(auth)
+    user
+  end
+
+  def self.create_user_from_session(auth, email)
+    user = User.new(email: email, password: Devise.friendly_token[0, 20])
+    user.create_authorizations(auth) if user.save
+    user
+  end
+
+  def create_authorizations(auth)
+    authorizations.create!(provider: auth['provider'], uid: auth['uid'])
+  end
+
+  def self.auth_email(auth)
+    auth.try(:info).try(:email)
   end
 end

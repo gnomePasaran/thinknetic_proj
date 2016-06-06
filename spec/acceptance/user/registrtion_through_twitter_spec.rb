@@ -1,29 +1,24 @@
 require_relative '../acceptance_helper'
 
-feature 'User sign in through twitter', %q{
-  In order to be able to sign in
-  As an User
-  I want to be able to sign in
-} do
+feature 'confirm registration' do
+  background do
+    clear_emails
+  end
 
-  describe "access top page" do
-    it "can sign in user with Twitter account" do
-      visit root_path
-      click_link "Registration"
-      expect(page).to have_content("Sign in with Twitter")
-      mock_auth_hash
-      click_link "Sign in"
-      expect(page).to have_content("mockuser")
-      expect(page).to have_content("Sign out")
+  context 'twitter registration' do
+    background do
+      mock_auth_hash#(provider: 'twitter', info: nil)
+      visit new_user_session_path
+      click_on 'Sign in with Twitter'
+      # sleep 0.5
+      fill_in 'Email', with: 'test@example.com'
+      click_on 'Continue'
+      open_email('test@example.com')
     end
 
-    it "can handle authentication error" do
-      OmniAuth.config.mock_auth[:twitter] = :invalid_credentials
-      visit root_path
-      click_link "Registration"
-      expect(page).to have_content("Sign in with Twitter")
-      click_link "Sign in"
-      expect(page).to have_content('Authentication failed.')
+    scenario 'confirm account' do
+      current_email.click_link 'Confirm my account'
+      expect(page).to have_content 'Your email address has been successfully confirmed'
     end
   end
 end

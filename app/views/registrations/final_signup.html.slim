@@ -3,8 +3,6 @@ h1 Final step
 p Please enter your email address to continue registration
 
 = form_for :user, url: send_confirmation_email_path, method: :patch do |f|
-  = hidden_field_tag :provider, @data[:provider]
-  = hidden_field_tag :uid, @data[:uid]
   = label_tag :email
   = email_field_tag :email, params[:email]
 
