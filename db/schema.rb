@@ -43,7 +43,6 @@ ActiveRecord::Schema.define(version: 20160607111922) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "authorizations", ["provider", "uid"], name: "index_authorizations_on_provider_and_uid", using: :btree
   add_index "authorizations", ["user_id"], name: "index_authorizations_on_user_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
@@ -98,5 +97,7 @@ ActiveRecord::Schema.define(version: 20160607111922) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
+
+  add_index "votes", ["user_id", "votable_id", "votable_type"], name: "index_votes_on_user_id_and_votable_id_and_votable_type", unique: true, using: :btree
 
 end
