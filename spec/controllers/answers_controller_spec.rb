@@ -139,21 +139,20 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    # ???? можно ли удалить эти тесты? они перестали проходить после autorize @answer
+    context 'not owner of question try to toggle best' do
+      before do
+        not_owner_question
+        get :toggle_best, id: not_owner_answer, question_id: not_owner_question
+      end
 
-    # context 'not owner of question try to toggle best' do
-    #   before do
-    #     not_owner_question
-    #     get :toggle_best, id: not_owner_answer, question_id: not_owner_question
-    #   end
-    #   it 'marks answer' do
-    #     expect{ not_owner_answer.reload }.not_to change{ owner_answer.is_best }
-    #   end
+      it 'marks answer' do
+        expect{ not_owner_answer.reload }.not_to change{ owner_answer.is_best }
+      end
 
-    #   it 'renders new order of question' do
-    #     expect(response).to redirect_to not_owner_question
-    #   end
-    # end
+      it 'renders new order of question' do
+        expect(response).to redirect_to root_path
+      end
+    end
   end
 
   describe 'POST #vote' do
@@ -172,13 +171,13 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'unlikes question' do
-        expect { post :vote_down, id: not_owner_answer, question_id: question, score: :dislike }
+        expect { post :vote_down, id: not_owner_answer, question_id: question }
             .to change{ not_owner_answer.get_score }.from(0).to(-1)
       end
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote_cancel, id: not_owner_answer, question_id: question, score: :neutral }
+        expect { post :vote_cancel, id: not_owner_answer, question_id: question }
             .to change{ not_owner_answer.get_score }.from(1).to(0)
       end
     end
@@ -191,24 +190,24 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'likes question' do
-        expect { post :vote_up, id: owner_answer, question_id: question, score: :like }
+        expect { post :vote_up, id: owner_answer, question_id: question }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'unlikes question' do
-        expect { post :vote_down, id: owner_answer, question_id: question, score: :dislike }
+        expect { post :vote_down, id: owner_answer, question_id: question }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote_cancel, id: owner_answer, question_id: question, score: :neutral }
+        expect { post :vote_cancel, id: owner_answer, question_id: question }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'render question view' do
-        post :vote_up, id: owner_answer, question_id: question, score: :like
-        expect(response.status).to eq 403
+        post :vote_up, id: owner_answer, question_id: question
+        expect(response.status).to eq 302
       end
     end
   end
