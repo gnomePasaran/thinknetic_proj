@@ -2,6 +2,7 @@ require "application_responder"
 
 class ApplicationController < ActionController::Base
   include Pundit
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   self.responder = ApplicationResponder
   respond_to :html
@@ -17,5 +18,13 @@ class ApplicationController < ActionController::Base
 
   def redirect_if_signed_in(path = root_path)
     redirect_to path if signed_in?
+  end
+
+
+  private
+
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    redirect_to(request.referrer || root_path)
   end
 end
