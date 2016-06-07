@@ -32,7 +32,6 @@ module Voted
   end
 
   def can_vote?
-    head :forbidden if current_user.id == @votable.user_id
+    authorize @votable, :vote?
   end
-
 end

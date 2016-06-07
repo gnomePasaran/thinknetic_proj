@@ -2,30 +2,35 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
 
   before_action :load_answer, only: [:edit, :update, :destroy, :access, :toggle_best]
-  before_action :load_question, only: [:create, :update, :destroy, :access, :toggle_best]
+  before_action :load_question, only: [:create, :update, :destroy, :access]
   before_action :access, only: [:update, :destroy]
+  ### ???
 
   include Voted
 
-  respond_to :js 
+  respond_to :js
 
   def create
+    authorize Answer
     @answer = @question.answers.create(answer_params.merge(user_id: current_user.id))
     respond_with @answer
   end
 
   def update
+    authorize @answer
     @answer.update(answer_params)
     respond_with @answer
   end
 
   def destroy
+    authorize @answer
     respond_with(@answer.destroy)
   end
 
   def toggle_best
-    @answer.toggle_best if current_user.id == @question.user_id
-    redirect_to @question
+    authorize @answer
+    @answer.toggle_best
+    redirect_to @answer.question
   end
 
   private

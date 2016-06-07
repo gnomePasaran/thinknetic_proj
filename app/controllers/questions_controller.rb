@@ -5,6 +5,7 @@ class QuestionsController < ApplicationController
   before_action :access, only: [:update, :destroy]
   after_action  :publicate_question, only: :create
 
+
   include Voted
 
   respond_to :js
@@ -19,20 +20,23 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    respond_with(@question = current_user.questions.new)
+    respond_with(authorize @question = current_user.questions.new)
   end
 
   def create
     @question = Question.create(question_params.merge(user_id: current_user.id))
+    authorize @question
     respond_with(@question)
   end
 
   def update
+    authorize @question
     @question.update(question_params)
     respond_with @question
   end
 
   def destroy
+    authorize @question
     respond_with(@question.destroy)
   end
 
