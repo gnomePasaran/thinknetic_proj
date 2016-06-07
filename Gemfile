@@ -29,6 +29,10 @@ gem 'cocoon'
 gem 'private_pub'
 gem 'thin'
 gem 'responders', '~> 2.0'
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+gem 'capybara-email'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 
@@ -59,6 +63,7 @@ end
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
+  gem 'letter_opener'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

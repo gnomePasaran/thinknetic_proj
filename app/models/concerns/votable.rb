@@ -31,7 +31,7 @@ module Votable
   end
 
   def get_vote(user)
-    votes.find_by_user_id(user)
+    votes.find_by(user: user)
   end
 
 end

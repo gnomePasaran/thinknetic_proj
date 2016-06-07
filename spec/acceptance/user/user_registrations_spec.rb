@@ -1,5 +1,3 @@
-require_relative 'acceptance_helper'
-
 feature 'User registration', %q{
   In order to be able to registrate
   As an User

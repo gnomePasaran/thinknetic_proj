@@ -113,7 +113,7 @@ Devise.setup do |config|
   # able to access the website for two days without confirming their account,
   # access will be blocked just in the third day. Default is 0.days, meaning
   # the user cannot access the website without confirming their account.
-  # config.allow_unconfirmed_access_for = 2.days
+  config.allow_unconfirmed_access_for = 2.days
 
   # A period that the user is allowed to confirm their account before their
   # token becomes invalid. For example, if set to 3.days, the user can confirm
@@ -241,7 +241,14 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  config.omniauth :facebook,
+        Rails.application.secrets.facebook_app_id,
+        Rails.application.secrets.facebook_app_secret,
+        scope: [:email]
+
+  config.omniauth :twitter,
+        Rails.application.secrets.twitter_app_id,
+        Rails.application.secrets.twitter_app_secret
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
