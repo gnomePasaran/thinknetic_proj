@@ -14,7 +14,7 @@ class AnswerPolicy < ApplicationPolicy
   end
 
   def toggle_best?
-    user.present? && (user.admin? || user.id == record.user_id)
+    user.present? && (user.admin? || user.id == record.question.user_id)
   end
 
   def vote?

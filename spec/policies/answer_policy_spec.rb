@@ -5,9 +5,11 @@ RSpec.describe AnswerPolicy do
   let(:user) { create(:user) }
   let(:other) { create(:user) }
   let(:admin) { create(:user, admin: true) }
-  let(:answer) { create(:answer) }
-  let(:question) { create(:question, user: user) }
-  let(:user_answer) { create(:answer, question: question, user: user) }
+  let(:user_question) { create(:question, user: user) }
+  let(:other_question) { create(:question, user: other) }
+
+  let(:other_answer) { create(:answer, question: other_question, user: other) }
+  let(:user_answer) { create(:answer, question: user_question, user: user) }
 
 
   subject { described_class }
@@ -18,16 +20,16 @@ RSpec.describe AnswerPolicy do
   end
 
   permissions :update?, :destroy? do
-    it { should permit(admin, answer) }
+    it { should permit(admin, other_answer) }
     it { should permit(user, user_answer) }
     it { should_not permit(other, user_answer) }
     it { should_not permit(guest, user_answer) }
   end
 
   permissions :toggle_best? do
-    it { should permit(admin, answer) }
+    it { should permit(admin, other_answer) }
     it { should permit(user, user_answer) }
-    it { should_not permit(other, user_answer) }
+    it { should_not permit(user, other_answer) }
   end
 
   permissions :vote? do
