@@ -3,8 +3,7 @@
   .score
     =obj.get_score
 
-  / if policy(obj).vote?
-  - if (obj.user != current_user) and signed_in?
+  - if policy(obj).vote?
     - vote = obj.get_vote(current_user)
 
     p.vote-cancel style="#{ vote ? ' ' : 'display:none' }"

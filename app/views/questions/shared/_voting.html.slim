@@ -3,7 +3,7 @@
   .score
     =obj.get_score
 
-  - if (obj.user != current_user) and signed_in?
+  - if policy(obj).vote?
     - vote = obj.get_vote(current_user)
 
     .comet-vote style="dispaly:none"
