@@ -20,7 +20,7 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    respond_with(authorize @question = current_user.questions.new)
+    respond_with(@question = current_user.questions.new)
   end
 
   def create
@@ -30,13 +30,11 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    authorize @question
     @question.update(question_params)
     respond_with @question
   end
 
   def destroy
-    authorize @question
     respond_with(@question.destroy)
   end
 
@@ -55,6 +53,6 @@ class QuestionsController < ApplicationController
   end
 
   def access
-    redirect_to @question unless current_user.id == @question.user_id
+    authorize @question
   end
 end
