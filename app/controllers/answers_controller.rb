@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :load_answer, only: [:edit, :update, :destroy, :access, :toggle_best]
+  before_action :load_answer, only: [:load_question, :edit, :update, :destroy, :access, :toggle_best]
   before_action :load_question, only: [:create, :update, :destroy, :access]
   before_action :access, only: [:update, :destroy]
   ### ???
@@ -40,6 +40,7 @@ class AnswersController < ApplicationController
   end
 
   def load_question
+    ### ??? нужно ли выносить этот метод в before_action
     @question = Question.find(params[:question_id])
   end
 
