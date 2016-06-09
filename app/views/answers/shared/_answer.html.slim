@@ -12,9 +12,9 @@
       .comet-best
         - if answer.is_best?
           p THE BEST
-          p= link_to('Unmark best', toggle_best_question_answer_path(@question, answer))
+          p= link_to('Unmark best', toggle_best_answer_path(@question, answer))
         - else
-          p= link_to('Mark best', toggle_best_question_answer_path(@question, answer))
+          p= link_to('Mark best', toggle_best_answer_path(@question, answer))
 
     == render 'questions/shared/voting', obj: answer, poly_path: [answer.question, answer]
 

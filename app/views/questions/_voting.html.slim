@@ -7,12 +7,12 @@
     - vote = obj.get_vote(current_user)
 
     p.vote-cancel style="#{ vote ? ' ' : 'display:none' }"
-      = link_to 'Cancel', polymorphic_path([:vote_cancel, poly_path].flatten), method: :post, \
+      = link_to 'Cancel', [:vote_cancel, obj.class.name.downcase], method: :post, \
           data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
 
     p.vote-plus style="#{ vote.score > 0 ? 'display:none' : ' ' if vote.present? }"
-      = link_to 'Vote +', polymorphic_path([:vote_up, poly_path].flatten), method: :post, \
+      = link_to 'Vote +', [:vote_up, obj.class.name.downcase], method: :post, \
           data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
     p.vote-minus style="#{ vote.score < 0 ? 'display:none' : ' ' if vote.present? }"
-      = link_to 'Vote -', polymorphic_path([:vote_down, poly_path].flatten), method: :post, \
+      = link_to 'Vote -', [:vote_down, obj.class.name.downcase], method: :post, \
           data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
