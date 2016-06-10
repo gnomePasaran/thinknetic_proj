@@ -8,12 +8,12 @@
 
     .comet-vote style="dispaly:none"
       p.vote-cancel style="#{ vote ? ' ' : 'display:none' }"
-        = link_to 'Cancel', [:vote_cancel, obj.class.name.downcase], method: :post, \
+        = link_to 'Cancel', [:vote_cancel, obj], method: :post, \
             data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
 
       p.vote-plus style="#{ vote.score > 0 ? 'display:none' : ' ' if vote.present? }"
-        = link_to 'Vote +', [:vote_up, obj.class.name.downcase], method: :post, \
+        = link_to 'Vote +', [:vote_up, obj], method: :post, \
             data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
       p.vote-minus style="#{ vote.score < 0 ? 'display:none' : ' ' if vote.present? }"
-        = link_to 'Vote -', [:vote_down, obj.class.name.downcase], method: :post, \
+        = link_to 'Vote -', [:vote_down, obj], method: :post, \
             data: { type: :json, entity_type: obj.class.name.underscore }, remote: true
