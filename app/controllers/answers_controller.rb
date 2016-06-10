@@ -1,10 +1,9 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  before_action :load_answer, only: [:load_question, :edit, :update, :destroy, :access, :toggle_best]
-  before_action :load_question, only: [:create, :update, :destroy, :access]
-  before_action :access, only: [:update, :destroy]
-  ### ???
+  before_action :load_answer, only: [:edit, :update, :destroy, :access, :toggle_best]
+  before_action :load_question, only: [:create]
+  before_action :access, only: [:update, :destroy, :toggle_best]
 
   include Voted
 
@@ -17,18 +16,15 @@ class AnswersController < ApplicationController
   end
 
   def update
-    authorize @answer
     @answer.update(answer_params)
     respond_with @answer
   end
 
   def destroy
-    authorize @answer
     respond_with(@answer.destroy)
   end
 
   def toggle_best
-    authorize @answer
     @answer.toggle_best
     redirect_to @answer.question
   end
@@ -40,7 +36,6 @@ class AnswersController < ApplicationController
   end
 
   def load_question
-    ### ??? нужно ли выносить этот метод в before_action
     @question = Question.find(params[:question_id])
   end
 
@@ -49,6 +44,6 @@ class AnswersController < ApplicationController
   end
 
   def access
-    redirect_to @question unless current_user.id == @answer.user_id
+    authorize @answer
   end
 end
