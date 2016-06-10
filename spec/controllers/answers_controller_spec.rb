@@ -83,7 +83,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to the update answer' do
         patch :update, id: not_owner_answer, answer: attributes_for(:answer), question_id: question, format: :js
-        expect(response).to redirect_to question
+        expect(response.status).to eq 403
       end
     end
   end
@@ -99,7 +99,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to question show view' do
         delete :destroy, id: answer, question_id: question , format: :js
-        expect(response).to redirect_to question
+        expect(response.status).to eq 403
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to question show view' do
         delete :destroy, id: answer, question_id: question, format: :js
-        expect(response).to redirect_to question
+        expect(response.status).to eq 403
       end
     end
   end
