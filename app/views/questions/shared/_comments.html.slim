@@ -8,7 +8,7 @@
     .comments-form
       p =link_to 'Create comment', '', class: 'new-comment-link', data: { commentable: "#{dom_id(obj)}" }
 
-      = form_for obj.comments.build, url: [obj, :comments], remote: true, html: { id: "new-comment-form" } do |f|
+      = form_for obj.comments.build, url: polymorphic_path([obj, :comments]), remote: true, html: { id: "new-comment-form" } do |f|
         p
           = f.label :body, 'Your comment'
           = f.text_area :body
