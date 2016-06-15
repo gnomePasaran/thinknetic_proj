@@ -33,6 +33,7 @@ gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'capybara-email'
+gem 'pundit'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 

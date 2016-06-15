@@ -5,6 +5,7 @@ class QuestionsController < ApplicationController
   before_action :access, only: [:update, :destroy]
   after_action  :publicate_question, only: :create
 
+
   include Voted
 
   respond_to :js
@@ -24,6 +25,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = Question.create(question_params.merge(user_id: current_user.id))
+    authorize @question
     respond_with(@question)
   end
 
@@ -51,6 +53,6 @@ class QuestionsController < ApplicationController
   end
 
   def access
-    redirect_to @question unless current_user.id == @question.user_id
+    authorize @question
   end
 end

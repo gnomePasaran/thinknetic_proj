@@ -8,15 +8,15 @@
       - answer.attachments.each do |a|
         li= link_to a.file.file.filename, a.file.url
 
-    - if (@question.user == current_user) and user_signed_in?
+    - if policy(answer).toggle_best?
       .comet-best
         - if answer.is_best?
           p THE BEST
-          p= link_to('Unmark best', toggle_best_question_answer_path(@question, answer))
+          p= link_to('Unmark best', toggle_best_answer_path(answer))
         - else
-          p= link_to('Mark best', toggle_best_question_answer_path(@question, answer))
+          p= link_to('Mark best', toggle_best_answer_path(answer))
 
-    == render 'questions/shared/voting', obj: answer, poly_path: [answer.question, answer]
+    == render 'questions/shared/voting', obj: answer
 
     .answer-comments
-      == render 'questions/shared/comments', obj: answer, poly_path: [answer.question, answer]
+      == render 'questions/shared/comments', obj: answer

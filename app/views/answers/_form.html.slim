@@ -1,6 +1,6 @@
 .answer-errors
 
-= form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}", class: class_form } do |f|
+= form_for [@question, answer], url: "#{answer.persisted? ? answer_path(answer) : question_answers_path(@question)}", remote: true, html: { id: "edit-answer-#{answer.id}", class: class_form } do |f|
   p
     = f.label :body, 'Your answer'
     = f.text_area :body

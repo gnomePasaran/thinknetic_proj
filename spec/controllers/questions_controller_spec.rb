@@ -125,7 +125,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to the update question' do
         patch :update, id: not_owner_question, question: attributes_for(:question), format: :js
-        expect(response).to redirect_to not_owner_question
+        expect(response.status).to eq 403
       end
     end
   end
@@ -152,7 +152,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'redirects to index view' do
         delete :destroy, id: not_owner_question
-        expect(response).to redirect_to question_path
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -209,7 +209,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'render question view' do
         post :vote_up, id: question
-        expect(response.status).to eq 403
+        expect(response.status).to eq 302
       end
     end
   end

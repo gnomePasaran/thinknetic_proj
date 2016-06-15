@@ -6,7 +6,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question, user: @user) }
   let(:answer) { create(:answer, question: question) }
   let(:owner_answer) { create(:answer, question: question, user: @user) }
-  let(:not_owner_answer) { create(:answer, question: question, user: not_author) }
+  let(:not_owner_answer) { create(:answer, question: not_owner_question, user: not_author) }
   let(:not_owner_question) { create(:question, user: not_author) }
   let(:vote_1) { create(:vote_answer, votable: not_owner_answer, user: user, score: 1) }
 
@@ -83,7 +83,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to the update answer' do
         patch :update, id: not_owner_answer, answer: attributes_for(:answer), question_id: question, format: :js
-        expect(response).to redirect_to question
+        expect(response.status).to eq 403
       end
     end
   end
@@ -99,7 +99,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to question show view' do
         delete :destroy, id: answer, question_id: question , format: :js
-        expect(response).to redirect_to question
+        expect(response.status).to eq 403
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to question show view' do
         delete :destroy, id: answer, question_id: question, format: :js
-        expect(response).to redirect_to question
+        expect(response.status).to eq 403
       end
     end
   end
@@ -133,22 +133,24 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'owner marks not his answer' do
       it 'marks answer' do
-        get :toggle_best, id: not_owner_answer, question_id: question
+        sign_in(not_author)
+        get :toggle_best, id: not_owner_answer, question_id: not_owner_question
         expect{ not_owner_answer.reload }.to change{ not_owner_answer.is_best }.from(false).to(true)
       end
     end
 
-    context 'not owner delete the answer' do
+    context 'not owner of question try to toggle best' do
       before do
         not_owner_question
         get :toggle_best, id: not_owner_answer, question_id: not_owner_question
       end
+
       it 'marks answer' do
         expect{ not_owner_answer.reload }.not_to change{ owner_answer.is_best }
       end
 
       it 'renders new order of question' do
-        expect(response).to redirect_to not_owner_question
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -169,13 +171,13 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'unlikes question' do
-        expect { post :vote_down, id: not_owner_answer, question_id: question, score: :dislike }
+        expect { post :vote_down, id: not_owner_answer, question_id: question }
             .to change{ not_owner_answer.get_score }.from(0).to(-1)
       end
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote_cancel, id: not_owner_answer, question_id: question, score: :neutral }
+        expect { post :vote_cancel, id: not_owner_answer, question_id: question }
             .to change{ not_owner_answer.get_score }.from(1).to(0)
       end
     end
@@ -188,24 +190,24 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'likes question' do
-        expect { post :vote_up, id: owner_answer, question_id: question, score: :like }
+        expect { post :vote_up, id: owner_answer, question_id: question }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'unlikes question' do
-        expect { post :vote_down, id: owner_answer, question_id: question, score: :dislike }
+        expect { post :vote_down, id: owner_answer, question_id: question }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'cancel voting for question' do
         vote_1
-        expect { post :vote_cancel, id: owner_answer, question_id: question, score: :neutral }
+        expect { post :vote_cancel, id: owner_answer, question_id: question }
             .not_to change{ owner_answer.get_score }
       end
 
       it 'render question view' do
-        post :vote_up, id: owner_answer, question_id: question, score: :like
-        expect(response.status).to eq 403
+        post :vote_up, id: owner_answer, question_id: question
+        expect(response.status).to eq 302
       end
     end
   end

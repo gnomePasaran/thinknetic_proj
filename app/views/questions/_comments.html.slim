@@ -4,11 +4,10 @@
       p.comment id="#{dom_id(comment)}"
         = comment.body
 
-  - if signed_in?
-    p =link_to 'Create comment', '', class: 'new-comment-link', data: { commentable: "#{dom_id(obj)}" }
-
-    = form_for obj.comments.build, url: polymorphic_path(poly_path.push(:comments)), remote: true, html: { id: "new-comment-form" } do |f|
-      p
-        = f.label :body, 'Your comment'
-        = f.text_area :body
-        = f.submit 'Create comment'
+  - if policy(obj).create?
+      p =link_to 'Create comment', '', class: 'new-comment-link', data: { commentable: "#{dom_id(obj)}" }
+      = form_for obj.comments.build, url: polymorphic_path([obj, :comments]), remote: true, html: { id: "new-comment-form" } do |f|
+        p
+          = f.label :body, 'Your comment'
+          = f.text_area :body
+          = f.submit 'Create comment'

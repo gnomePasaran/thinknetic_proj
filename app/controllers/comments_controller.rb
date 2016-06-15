@@ -1,4 +1,4 @@
-class CommentsController < ActionController::Base
+class CommentsController < ApplicationController
   before_action :authenticate_user!
 
   before_action :set_commentable, only: [:create]
@@ -8,6 +8,7 @@ class CommentsController < ActionController::Base
   respond_to :json
 
   def create
+    authorize Comment
     @comment = @commentable.comments.create(set_comment.merge(user_id: current_user.id))
     @channel = @commentable.question if commentable_name == 'answers'
     @channel ||= @commentable
