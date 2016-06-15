@@ -16,4 +16,6 @@
 //= require private_pub
 //= require turbolinks
 //= require cocoon
+//= require templates/questions/question
+//= require templates/questions/_form
 //= require_tree .

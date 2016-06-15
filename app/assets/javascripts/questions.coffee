@@ -18,7 +18,9 @@ $ ->
 
   questionId = $('.question').data('questionId')
   PrivatePub.subscribe '/questions/' + questionId + '/answer' , (data, channel) ->
-    question = $.parseJSON(data['question'])
-    console.log question
+    # question = $.parseJSON(data['question'])
+    # console.log question
+    console.log data.question
     # console.log JST
-    $('.question').replaceWith(JST["question"](question))
+    console.log JST["templates/questions/question"]({data.question})
+    $('.question').replaceWith(JST["templates/questions/question"]({data.question}))

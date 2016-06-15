@@ -1,7 +1,7 @@
 .answer_form_wrapper
   .answer_errors
 
-  form.edit_answer id="question-form" action="/questions/#{id}" data-remote="true" method="post" accepts-charset="UTF-8"
+  form.edit_answer id="question-form" action="/questions/#{@id}" data-remote="true" method="post" accepts-charset="UTF-8"
     input name="utf8" type="hidden" value="✓"
     input type="hidden" name="_method" value="patch"
 
