@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  use_doorkeeper
+
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 
   get '/final_signup' => 'registrations#final_signup', as: :final_signup
@@ -20,6 +22,14 @@ Rails.application.routes.draw do
       resources :comments, only: [:create], defaults: { commentable: 'answers' }
       member do
         get :toggle_best
+      end
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: :index do
+        get :me, on: :collection
       end
     end
   end

@@ -34,6 +34,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'capybara-email'
 gem 'pundit'
+gem 'doorkeeper'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 
@@ -59,6 +60,7 @@ end
 
 group :test do
   gem 'shoulda-matchers', '~> 2.8.0'
+  gem 'json_spec'
 end
 
 group :development do
