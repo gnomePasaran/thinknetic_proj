@@ -1,24 +1,16 @@
 .question data-question-id="#{@id}"
-  h1= @title
-  p= @body
+  h1 = @title
+  p = @body
 
   p Attachments:
   ul
-    / - @attachments.each do |a|
-    /   li= link_to a.file.identifier, a.file.url
 
 
   - if @user_id == gon.user_id
-    = link_to 'Edit question', '', class: 'edit-question-link'
-    = link_to 'Delete question', question_path(@), method: :delete
+    a.edit-question-link href='' Edit question
+    a href="question/#{@id}" data-method="delete" Delete question
 
     .question-errors
 
-    / == JST['form'](@)
-
-  / == JST['templates/questions/voting'](@)
-  / == render 'voting', obj: @, poly_path: @
 
   .question-comments
-    / == render 'comments', obj: @, poly_path: [@]
-    / == JST['templates/questions/comments'](@)
