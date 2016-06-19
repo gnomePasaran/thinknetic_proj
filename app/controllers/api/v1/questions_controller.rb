@@ -6,8 +6,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def show
     @question = Question.find(params[:id])
+    p @question.comments
     respond_with @question
   end
-
-
 end

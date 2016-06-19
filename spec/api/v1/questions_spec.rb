@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'Question API' do
   let(:access_token) { create(:access_token) }
+  let!(:questions) { create_pair(:question) }
 
   describe 'GET /index' do
     context 'unauthorized' do
@@ -18,7 +19,6 @@ describe 'Question API' do
 
     context 'authorized' do
       context 'questions' do
-        let!(:questions) { create_pair(:question) }
         let!(:answer) { create(:answer, question: questions.first) }
 
         before { get '/api/v1/questions', format: :json, access_token: access_token.token }
@@ -72,28 +72,41 @@ describe 'Question API' do
     end
 
     context 'authorized' do
-      context 'questions' do
-        let!(:question) { create(:question) }
-        let!(:answer) { create(:answer, question: question) }
+      let!(:question) { create(:question) }
 
-        before { get '/api/v1/questions/1', format: :json, access_token: access_token.token }
+      before { get "/api/v1/questions/#{question.id}", format: :json, access_token: access_token.token }
 
+      context 'question' do
         it 'returns status 200' do
           expect(response).to be_success
         end
 
         it 'returns question' do
-          expect(response.body).to have_json_size(1)
+          expect(response.body).to have_json_size(7)
         end
 
         %w(id title body created_at updated_at).each do |attr|
           it "question object contains #{attr}" do
-            expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("question/0/#{attr}")
+            p response.body
+            expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("#{attr}")
           end
         end
 
         it 'question object contains short_title' do
-          expect(response.body).to be_json_eql(question.title.truncate(10).to_json).at_path("question/0/short_title")
+          expect(response.body).to be_json_eql(question.title.truncate(10).to_json).at_path("short_title")
+        end
+      end
+
+      context 'question should contains' do
+        let!(:comments) { create_pair(:comment_question, commentable: question) }
+
+        it 'comments' do
+          expect(response.body).to be_json_eql(question.comments.to_json)
+        end
+
+        it "comment should contains #{attr}" do
+          expect(response.body).to 
+            be_json_eql(question.comments.first.send(attr.to_sym).to_json).at_path("comments/#{attr}")
         end
       end
     end
