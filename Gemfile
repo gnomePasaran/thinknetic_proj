@@ -35,6 +35,9 @@ gem 'omniauth-twitter'
 gem 'capybara-email'
 gem 'pundit'
 gem 'doorkeeper'
+gem 'active_model_serializers'
+gem 'oj'
+gem 'oj_mimic_json'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 
