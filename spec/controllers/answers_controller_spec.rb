@@ -10,6 +10,8 @@ RSpec.describe AnswersController, type: :controller do
   let(:not_owner_question) { create(:question, user: not_author) }
   let(:vote_1) { create(:vote_answer, votable: not_owner_answer, user: user, score: 1) }
 
+  let(:vote_params) { { id: not_owner_answer, question_id: question } }
+  let(:votable) { not_owner_answer }
 
   describe 'POST #create' do
     sign_in_user
@@ -156,59 +158,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #vote' do
-    sign_in_user
-
-    context 'user likes the question' do
-
-      before do
-        not_owner_answer
-        sign_in(user)
-      end
-
-      it 'likes question' do
-        expect { post :vote_up, id: not_owner_answer, question_id: question }
-            .to change{ not_owner_answer.get_score }.from(0).to(1)
-      end
-
-      it 'unlikes question' do
-        expect { post :vote_down, id: not_owner_answer, question_id: question }
-            .to change{ not_owner_answer.get_score }.from(0).to(-1)
-      end
-
-      it 'cancel voting for question' do
-        vote_1
-        expect { post :vote_cancel, id: not_owner_answer, question_id: question }
-            .to change{ not_owner_answer.get_score }.from(1).to(0)
-      end
-    end
-
-    context 'Athor of the question try to' do
-
-      before do
-        owner_answer
-        sign_in(@user)
-      end
-
-      it 'likes question' do
-        expect { post :vote_up, id: owner_answer, question_id: question }
-            .not_to change{ owner_answer.get_score }
-      end
-
-      it 'unlikes question' do
-        expect { post :vote_down, id: owner_answer, question_id: question }
-            .not_to change{ owner_answer.get_score }
-      end
-
-      it 'cancel voting for question' do
-        vote_1
-        expect { post :vote_cancel, id: owner_answer, question_id: question }
-            .not_to change{ owner_answer.get_score }
-      end
-
-      it 'render question view' do
-        post :vote_up, id: owner_answer, question_id: question
-        expect(response.status).to eq 302
-      end
-    end
+    it_behaves_like 'votable'
   end
 end
