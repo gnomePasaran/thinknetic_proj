@@ -7,7 +7,7 @@ RSpec.describe Question, type: :model do
   it { should validate_presence_of :user_id }
   it { should belong_to(:user) }
 
-  it { should have_many(:answers).dependent(:destroy) }
+  it { should have_many(:answers).dependent(:destroy).order(is_best: :desc, created_at: :asc) }
 
   it { should have_many(:attachments).dependent(:destroy) }
   it { should accept_nested_attributes_for(:attachments).allow_destroy(true) }
