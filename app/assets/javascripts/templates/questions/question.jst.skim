@@ -12,5 +12,6 @@
 
     .question-errors
 
+    == JST["templates/questions/_form"](@)
 
   .question-comments

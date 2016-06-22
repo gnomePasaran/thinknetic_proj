@@ -22,5 +22,5 @@ $ ->
     # console.log question
     console.log data.question
     # console.log JST
-    console.log JST["templates/questions/question"]({data.question})
-    $('.question').replaceWith(JST["templates/questions/question"]({data.question}))
+    console.log JST["templates/questions/question"]($.parseJSON(data['question']))
+    $('.question').replaceWith(JST["templates/questions/question"]($.parseJSON(data['question'])))
