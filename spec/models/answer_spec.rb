@@ -14,4 +14,27 @@ RSpec.describe Answer, type: :model do
 
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+
+  describe 'toggle is_best' do
+    let!(:question) { create(:question) }
+    it 'toggles' do
+      answer = create(:answer, question: question)
+      expect { answer.toggle_best }.to change { answer.reload.is_best }.from(false).to(true)
+    end
+
+    it 'untoggles' do
+      answer = create(:answer, question: question, is_best: true)
+      expect { answer.toggle_best }.to change { answer.reload.is_best }.from(true).to(false)
+    end
+
+    it 'toggles new answer' do
+      answer = build(:answer, question: question)
+      expect { answer.toggle_best }.to change { answer.is_best }.from(false).to(true)
+    end
+
+    it 'untoggles new answer' do
+      answer = build(:answer, question: question, is_best: true)
+      expect { answer.toggle_best }.to change { answer.is_best }.from(true).to(false)
+    end
+  end
 end
