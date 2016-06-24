@@ -23,6 +23,10 @@ Rails.application.routes.draw do
   end
 
   resources :questions, concerns: :votable, except: [:edit], shallow: true do
+    member do
+      post :subscribe, to: 'subscriptions#create'
+      delete :unsubscribe, to: 'subscriptions#destroy'
+    end
     resources :comments, only: [:create], defaults: { commentable: 'questions' }
     resources :answers, only: [:create, :update, :destroy], concerns: :votable do
       resources :comments, only: [:create], defaults: { commentable: 'answers' }
