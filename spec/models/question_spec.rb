@@ -14,4 +14,20 @@ RSpec.describe Question, type: :model do
 
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+
+  it { should have_many(:subscriptions).dependent(:destroy) }
+
+  context 'subscriptions' do
+    let!(:user) { create(:user) }
+    let(:question) { build(:question, user: user) }
+
+    it 'receives subscribe_user after commit on create' do
+      expect(question).to receive(:subscribe_user)
+      question.save
+    end
+
+    it 'creates subscription' do
+      expect { question.save }.to change(Subscription, :count).by(1)
+    end
+  end
 end

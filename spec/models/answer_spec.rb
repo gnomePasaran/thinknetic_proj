@@ -16,7 +16,8 @@ RSpec.describe Answer, type: :model do
   it { should have_many(:comments).dependent(:destroy) }
 
   describe 'toggle is_best' do
-    let!(:question) { create(:question) }
+    let!(:user) { create(:user) }
+    let!(:question) { create(:question, user: user) }
     it 'toggles' do
       answer = create(:answer, question: question)
       expect { answer.toggle_best }.to change { answer.reload.is_best }.from(false).to(true)
@@ -35,6 +36,16 @@ RSpec.describe Answer, type: :model do
     it 'untoggles new answer' do
       answer = build(:answer, question: question, is_best: true)
       expect { answer.toggle_best }.to change { answer.is_best }.from(true).to(false)
+    end
+  end
+
+  describe '#notify_subscribers' do
+    let!(:user) { create(:user) }
+    let(:answer) { create(:answer, user: user) }
+
+    it 'run notification job after creating answer' do
+      expect(QuestionNotificationJob).to receive(:perform_later)
+      answer.run_callbacks(:commit)
     end
   end
 end
