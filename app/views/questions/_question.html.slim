@@ -1,4 +1,6 @@
 .question data-question-id="#{@question.id}"
+  == render 'subscriptions/subscription'
+
   h1= @question.title
   p= @question.body
 

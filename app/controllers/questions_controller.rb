@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
 
   before_action :load_question, only: [:edit, :show, :update, :destroy, :access]
   before_action :access, only: [:update, :destroy]
+  before_action :build_subscription, only: [:show]
   after_action  :publicate_question, only: :create
 
 
@@ -54,5 +55,9 @@ class QuestionsController < ApplicationController
 
   def access
     authorize @question
+  end
+
+  def build_subscription
+    @subscription = Subscription.find_by(question: @question, user: current_user)
   end
 end
