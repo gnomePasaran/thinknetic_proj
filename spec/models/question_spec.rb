@@ -18,8 +18,7 @@ RSpec.describe Question, type: :model do
   it { should have_many(:subscriptions).dependent(:destroy) }
 
   context 'subscriptions' do
-    let!(:user) { create(:user) }
-    let(:question) { build(:question, user: user) }
+    let(:question) { build(:question) }
 
     it 'receives subscribe_user after commit on create' do
       expect(question).to receive(:subscribe_user)

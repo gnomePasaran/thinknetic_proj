@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.describe DailyDigestMailer, type: :mailer do
   describe '#daily_digest' do
     let(:user) { create(:user) }
-    let(:email) { DailyDigestMailer.daily_digest(user) }
     let(:questions) { create_pair(:question) }
-    let(:old_question) { create(:question, created_at: Time.now - 2.days) }
+    let(:email) { DailyDigestMailer.daily_digest(user, questions) }
+    let(:old_question) { create(:question, title: 'Old question', created_at: Time.now - 2.days) }
 
     it 'delivered to the user' do
       expect(email.to[0]).to eq user.email

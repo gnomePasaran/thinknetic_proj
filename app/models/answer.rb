@@ -23,6 +23,6 @@ class Answer < ActiveRecord::Base
   private
 
   def notify_subscribers
-    QuestionNotificationJob.perform_later(self) if self.persisted?
+    QuestionNotificationJob.perform_later(self)
   end
 end
