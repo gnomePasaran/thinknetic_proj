@@ -11,6 +11,7 @@ RSpec.describe User do
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
   it { should have_many(:authorizations).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
 
   let(:auth) { OmniAuth::AuthHash.new(provider: 'Facebook', uid: '123456', info: { email: "test@email.com" }) }
 

@@ -1,0 +1,4 @@
+#subscription-links class="#{@subscription.present? ? 'subscribed' : ''}"
+  - if policy(Subscription).create?
+    = link_to 'subscribe', subscribe_question_path(@question), class: 'subscription subscribe', remote: true, method: :post, data: { type: :json }
+    = link_to 'unsubscribe', unsubscribe_question_path(@question), class: 'subscription unsubscribe', remote: true, method: :delete, data: { type: :json }

@@ -20,7 +20,6 @@ class ApplicationController < ActionController::Base
     redirect_to path if signed_in?
   end
 
-
   private
 
   def user_not_authorized

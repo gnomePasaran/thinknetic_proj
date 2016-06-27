@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :answer do
     question_id 1
     body "MyAnswerBody"
-    user_id 1
+    user
   end
 
   factory :invalid_answer, class: 'Answer' do
