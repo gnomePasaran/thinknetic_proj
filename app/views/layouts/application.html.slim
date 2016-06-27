@@ -13,6 +13,8 @@ html lang="en"
       = link_to 'Registration', new_user_registration_path
       = link_to 'Log in', new_user_session_path
 
+    = render 'search/form'
+
     = flash[:notice] if flash[:notice]
     = flash[:alert] if flash[:alert]
 
