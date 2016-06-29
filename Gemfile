@@ -41,6 +41,8 @@ gem 'oj_mimic_json'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', require: nil
 gem 'whenever'
+gem 'mysql2', '~> 0.3.18'
+gem 'thinking-sphinx', '~> 3.2.0'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 

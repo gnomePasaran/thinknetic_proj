@@ -37,3 +37,7 @@ bower.json
 
 # Ignore database.config
 /config/database.yml
+
+dump.rdb
+config/*.sphinx.conf
+db/sphinx
