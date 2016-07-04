@@ -46,6 +46,7 @@ gem 'thinking-sphinx', '~> 3.2.0'
 gem 'dotenv'
 gem 'dotenv-deployment', require: 'dotenv/deployment'
 gem 'therubyracer'
+gem 'unicorn'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 
@@ -55,6 +56,7 @@ group :development do
   gem 'capistrano-rails', require: false
   gem 'capistrano-rvm', require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano3-unicorn', require: false
 end
 
 # Use ActiveModel has_secure_password
