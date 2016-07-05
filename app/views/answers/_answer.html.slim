@@ -1,6 +1,7 @@
 .answer id="answer-#{answer.id}"
   .answer-text id="answer-text-#{answer.id}"
-    p =answer.body
+    - cache answer do
+      p =answer.body
 
   - if answer.persisted?
     p Attachments:

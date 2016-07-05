@@ -1,12 +1,11 @@
-- cache @question do
-  == render 'questions/question'
+== render 'questions/question'
 
-  .answers
-    - for answer in @question.answers
-      == render 'answers/answer', answer: answer
+.answers
+  - for answer in @question.answers
+    == render 'answers/answer', answer: answer
 
-  - if policy(@answer).create?
-    == render 'answers/form', answer: @answer, button_text: 'Create answer', class_form: 'new_answer_form'
+- if policy(@answer).create?
+  == render 'answers/form', answer: @answer, button_text: 'Create answer', class_form: 'new_answer_form'
 
 = subscribe_to "/questions/#{@question.id}/answer"
 
