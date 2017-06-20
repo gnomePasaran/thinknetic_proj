@@ -1,6 +1,6 @@
 # README
 
-My educational application form Middle Dev course from Thinknetica Connect
+My education application form Middle Dev course from Thinknetica Connect
 
 ### Discription:
 
@@ -12,7 +12,7 @@ Stack Overflow clone with __Ruby on Rails 4__
 
 * __TDD__/__BDD__/__acceptance testing__, advanced __RSpec__
 
-* Ajax, nested forms, polimophic assocciations
+* Ajax, nested forms, polymorphic associations
 
 * __Commet__, Pub/Sub, responders
 
